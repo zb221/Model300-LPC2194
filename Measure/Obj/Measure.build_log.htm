@@ -1,0 +1,87 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.23.0.0
+Copyright (C) 2017 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: z z, z, LIC=BUURA-12BBN-AR5XW-QWV39-W9ZMX-WTGU4
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Plus  Version: 5.23
+Toolchain Path:  C:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 4 (build 422)
+Assembler:       Armasm.exe V5.06 update 4 (build 422)
+Linker/Locator:  ArmLink.exe V5.06 update 4 (build 422)
+Library Manager: ArmAr.exe V5.06 update 4 (build 422)
+Hex Converter:   FromElf.exe V5.06 update 4 (build 422)
+CPU DLL:         SARM.DLL V5.23
+Dialog DLL:      DARMP.DLL V1.53.0.0
+Target DLL:      Segger\JLTAgdi.dll V1.60.0.0
+Dialog DLL:      TARMP.DLL V1.53.0.0
+ 
+<h2>Project:</h2>
+D:\DATA\Measure\Measure\Measure.uvproj
+Project File Date:  08/03/2017
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 4 (build 422)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+Rebuild target 'MCB2130'
+Clean started - Project: 'Measure'
+   deleting intermediate output files for target 'MCB2130'
+assembling Startup.s...
+compiling Retarget.c...
+compiling Serial.c...
+Serial.c(56): warning:  #61-D: integer operation result is out of range
+        
+INSEL0 = 
+INSEL0 & (~(0x03 << 30));    /*RDY1->P0.15*/
+Serial.c(176): warning:  #1-D: last line of file ends without a newline
+  */
+Serial.c: 2 warnings, 0 errors
+compiling Measure.c...
+measure.h(54): warning:  #1-D: last line of file ends without a newline
+  extern void AD7738_SET(void);
+Measure.c: 1 warning, 0 errors
+compiling Mcommand.c...
+measure.h(54): warning:  #1-D: last line of file ends without a newline
+  extern void AD7738_SET(void);
+Mcommand.c: 1 warning, 0 errors
+compiling Getline.c...
+measure.h(54): warning:  #1-D: last line of file ends without a newline
+  extern void AD7738_SET(void);
+Getline.c: 1 warning, 0 errors
+linking...
+Program Size: Code=8564 RO-data=956 RW-data=48 ZI-data=1272  
+".\Obj\Measure.axf" - 0 Error(s), 5 Warning(s).
+
+*** Performing Cross-Module-Optimization:
+compiling Retarget.c...
+compiling Serial.c...
+Serial.c(56): warning:  #61-D: integer operation result is out of range
+        
+INSEL0 = 
+INSEL0 & (~(0x03 << 30));    /*RDY1->P0.15*/
+Serial.c(176): warning:  #1-D: last line of file ends without a newline
+  */
+Serial.c: 2 warnings, 0 errors
+linking...
+Program Size: Code=8528 RO-data=956 RW-data=48 ZI-data=1272  
+compiling Retarget.c...
+compiling Serial.c...
+Serial.c(56): warning:  #61-D: integer operation result is out of range
+        
+INSEL0 = 
+INSEL0 & (~(0x03 << 30));    /*RDY1->P0.15*/
+Serial.c(176): warning:  #1-D: last line of file ends without a newline
+  */
+Serial.c: 2 warnings, 0 errors
+linking...
+Program Size: Code=8528 RO-data=956 RW-data=48 ZI-data=1272  
+FromELF: creating hex file...
+".\Obj\Measure.axf" - 0 Error(s), 2 Warning(s).
+*** Completed Cross-Module-Optimization after 3 iteration(s).
+Build Time Elapsed:  00:00:02
+</pre>
+</body>
+</html>

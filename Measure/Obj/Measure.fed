@@ -1,0 +1,11 @@
+;#<FEEDBACK># ARM Linker, 5060422: Last Updated: Thu Aug 10 15:42:44 2017
+;VERSION 0.2
+;FILE getline.o
+;FILE mcommand.o
+;FILE measure.o
+;FILE retarget.o
+_sys_exit <= USED 0
+_ttywrch <= USED 0
+ferror <= USED 0
+;FILE serial.o
+SPI1_SendDate <= USED 0
