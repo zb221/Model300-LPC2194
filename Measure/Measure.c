@@ -183,6 +183,7 @@ int main (void)  {                             /* main entry for program      */
   int i;                                       /* index for command buffer    */
   int idx;                                     /* index for circular buffer   */
 	unsigned char DATA_BUF = 0x00;
+  unsigned int data = 0;
 
   PINSEL1 = 0x15400000;                        /* Select AIN0..AIN3           */
   IODIR1  = 0xFF0000;                          /* P1.16..23 defined as Outputs*/
@@ -194,33 +195,32 @@ int main (void)  {                             /* main entry for program      */
 	printf("PCSPI0:%d,PCSPI1:%d,PCSSP:%d\n",((PCONP|0x0<<8)>>8)&0x1,((PCONP|0x0<<10)>>10)&0x1,((PCONP|0x0<<21))>>21)&0x1;
 	
 	AD7738_CS_INIT();
-	M25P16_CS_INIT();
+//	M25P16_CS_INIT();
 	DAC8568_CS_INIT();
+
+ 	init_PWM();
 	
 	DAC8568_SET(0x0,0x9,0x0,0xA000,0);		/*Power up internal reference all the time regardless DAC states*/	
-	DAC8568_SET(0x0,0x3,0x6,0x2000,0);		/*DAC-G*/
+	DAC8568_SET(0x0,0x3,0x6,0x1000,0);		/*DAC-G*/
+
+while(1){
+	data = 0;
+	DelayNS(500);
 
 	AD7738_SET();
-//	DelayNS(100);
-//	
-//	AD7738_read(0x01,&DATA_BUF);
-//	printf("AD7738 01h : 0x%x\n",DATA_BUF);
-//	AD7738_read(0x29,&DATA_BUF);
-//	printf("AD7738 29h : 0x%x\n",DATA_BUF);
-//	AD7738_read(0x31,&DATA_BUF);
-//	printf("AD7738 31h : 0x%x\n",DATA_BUF);
-//	AD7738_read(0x38,&DATA_BUF);
-//	printf("AD7738 38h : 0x%x\n",DATA_BUF);
-//	
-	AD7738_read(0x20,&DATA_BUF);
-	printf("AD7738 20h : 0x%x\n",DATA_BUF);
+	DelayNS(100);
 	
-	AD7738_read(0x04,&DATA_BUF);
-	printf("AD7738 04h : 0x%x\n",DATA_BUF);
+//	AD7738_read(0x21,&DATA_BUF);
+//	printf("AD7738 21h : 0x%x\n",DATA_BUF);
+//	
+//	AD7738_read(0x04,&DATA_BUF);
+//	printf("AD7738 04h : 0x%x\n",DATA_BUF);
 	while(IO0PIN & 0x1<<15);		/*wait RDY goes LOW*/
+	
+	AD7738_read_continue(0x09,&data);	/*09h: Data Register*/	
+	printf("AD7738 09h : %d\n\n\n",data);
 
-	AD7738_read(0x08,&DATA_BUF);	/*08h: Data Register*/	
-	printf("AD7738 08h : 0x%x\n",DATA_BUF);
+}
 
   /* setup the timer counter 0 interrupt */
   T0MR0 = 14999;                               /* 1mSec = 15.000-1 counts     */

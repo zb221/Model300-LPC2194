@@ -38,7 +38,7 @@ void init_serial (void)  {
 
 	/*---------------------------------SPI0-----------------------------------------------*/
 	PINSEL0 = (PINSEL0 & 0xFFFF00FF) | 0x15<<8; /*SPI0 PIN SEL*/
-	S0SPCR = 0x00|(1 << 3)|(1 << 4)|(1 << 5)|(0 << 6)|(0 << 7);  /*Master mode*/
+	S0SPCR = 0x00|(0 << 3)|(1 << 4)|(1 << 5)|(0 << 6)|(0 << 7);  /*Master mode*/
 	S0SPCCR = 0x00 | 0x1<<5; /*SPI Clock Counter: PCLK / SnSPCCR*/
 
 /*---------------------------------SPI1-----------------------------------------------*/	
@@ -148,6 +148,18 @@ void AD7738_read(unsigned char Register,unsigned char *data)
 	IOSET0 = IOSET0 | 0x1<<20;    /*CS1/SSEL1 set HIGHT*/
 }
 
+void AD7738_read_continue(unsigned char Register,unsigned int *data)
+{
+	IOCLR0 = IOCLR0 | 0x1<<20;		/*CS1/SSEL1 set LOW*/
+	
+	SPI0_SendDate(1<<6|(0x3F & Register));
+ 	*data = SPI0_SendDate(0x00)<<16;
+	*data |= SPI0_SendDate(0x00)<<8;
+	*data |= SPI0_SendDate(0x00);
+	
+	IOSET0 = IOSET0 | 0x1<<20;    /*CS1/SSEL1 set HIGHT*/
+}
+
 void AD7738_SET(void)
 {
 	IOCLR0 = IOCLR0 | 0x1<<20;		/*CS1/SSEL1 set LOW*/
@@ -160,17 +172,26 @@ void AD7738_SET(void)
 	
 	DelayNS(10);
 	
-	AD7738_write(0x28,0<<7|1<<6|1<<5|0<<4|1<<3|0x4);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
-	AD7738_write(0x30,1<<7|0x2E);	/*channel coversion time*/
-	AD7738_write(0x38,0x1<<5|1<<4|0<<3|1<<2|1<<1|0);		/*Mode Register: Mod2_0|CLKDIS|DUMP|CONT_RD|24_16|CLAMP*/
+	AD7738_write(0x29,0<<7|0<<6|0<<5|0<<4|1<<3|0x4);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
+	AD7738_write(0x31,1<<7|0x2E);	/*channel coversion time*/
+	AD7738_write(0x39,0x2<<5|1<<4|0<<3|0<<2|1<<1|0);		/*Mode Register: Mod2_0|CLKDIS|DUMP|CONT_RD|24_16|CLAMP*/
 }
 
-/*
-unsigned char M25P16_SET(unsigned char Instruction,unsigned char data)
+void AD7738_READ_isr (void) 
 {
-	IOCLR0 = IOCLR0 | 0x1<<25;			//Pull Chipselect low P0.25
-	data = SPI1_SendDate(Instruction);
-	IOSET0 = IOSET0 | 0x1<<25;			//Pull Chipselect Hight P0.25
-	return data;
+
 }
-*/
+
+void init_PWM (void) 
+{
+  PINSEL1 |= 0x01<<10;											//Enable pin 0.21   as PWM5
+  PWMPR    = 0x00000000;                    /* Load prescaler  */
+  
+  PWMPCR = 0x1<<13;                      /* PWM channel 5 single edge control, output enabled */
+  PWMMCR = 1<<1;                      /* PWMMR0/PWMMR5 On match with timer reset the counter */
+  PWMMR0 = 100;                           /* PWMMR0       */
+  PWMMR5 = 50;                               /* PWMMR5    */
+  PWMLER = 0xF;                             /* enable shadow latch for match 1 - 3   */ 
+  PWMTCR = 0x00000002;                      /* Reset counter and prescaler           */ 
+  PWMTCR = 0x00000009;                      /* enable counter and PWM, release counter from reset */
+}

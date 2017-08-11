@@ -52,3 +52,5 @@ extern void AD7738_read(unsigned char Register,unsigned char *data);
 extern void AD7738_write(unsigned char Register,unsigned char data);
 extern unsigned char M25P16_SET(unsigned char Instruction,unsigned char data);
 extern void AD7738_SET(void);
+extern void AD7738_read_continue(unsigned char Register,unsigned int *data);
+extern void init_PWM (void);

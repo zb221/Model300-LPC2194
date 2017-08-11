@@ -1,4 +1,5 @@
 
-#define Channel_Setup_Reg BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0
+#define Channel_data_base_addr 0x08
+#define channel_data_0
 
 

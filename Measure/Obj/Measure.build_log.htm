@@ -36,24 +36,26 @@ Serial.c(56): warning:  #61-D: integer operation result is out of range
         
 INSEL0 = 
 INSEL0 & (~(0x03 << 30));    /*RDY1->P0.15*/
-Serial.c(176): warning:  #1-D: last line of file ends without a newline
-  */
-Serial.c: 2 warnings, 0 errors
+Serial.c: 1 warning, 0 errors
 compiling Measure.c...
-measure.h(54): warning:  #1-D: last line of file ends without a newline
-  extern void AD7738_SET(void);
-Measure.c: 1 warning, 0 errors
+measure.h(56): warning:  #1-D: last line of file ends without a newline
+  extern void init_PWM (void);
+Measure.c(226): warning:  #111-D: statement is unreachable
+    
+Measure.c(185): warning:  #177-D: variable "DATA_BUF"  was declared but never referenced
+        unsigned char DATA_BUF = 0x00;
+Measure.c: 3 warnings, 0 errors
 compiling Mcommand.c...
-measure.h(54): warning:  #1-D: last line of file ends without a newline
-  extern void AD7738_SET(void);
+measure.h(56): warning:  #1-D: last line of file ends without a newline
+  extern void init_PWM (void);
 Mcommand.c: 1 warning, 0 errors
 compiling Getline.c...
-measure.h(54): warning:  #1-D: last line of file ends without a newline
-  extern void AD7738_SET(void);
+measure.h(56): warning:  #1-D: last line of file ends without a newline
+  extern void init_PWM (void);
 Getline.c: 1 warning, 0 errors
 linking...
-Program Size: Code=8564 RO-data=956 RW-data=48 ZI-data=1272  
-".\Obj\Measure.axf" - 0 Error(s), 5 Warning(s).
+Program Size: Code=5200 RO-data=32 RW-data=48 ZI-data=1272  
+".\Obj\Measure.axf" - 0 Error(s), 6 Warning(s).
 
 *** Performing Cross-Module-Optimization:
 compiling Retarget.c...
@@ -62,26 +64,54 @@ Serial.c(56): warning:  #61-D: integer operation result is out of range
         
 INSEL0 = 
 INSEL0 & (~(0x03 << 30));    /*RDY1->P0.15*/
-Serial.c(176): warning:  #1-D: last line of file ends without a newline
-  */
-Serial.c: 2 warnings, 0 errors
+Serial.c: 1 warning, 0 errors
+compiling Measure.c...
+measure.h(56): warning:  #1-D: last line of file ends without a newline
+  extern void init_PWM (void);
+Measure.c(226): warning:  #111-D: statement is unreachable
+    
+Measure.c(185): warning:  #177-D: variable "DATA_BUF"  was declared but never referenced
+        unsigned char DATA_BUF = 0x00;
+Measure.c: 3 warnings, 0 errors
+compiling Mcommand.c...
+measure.h(56): warning:  #1-D: last line of file ends without a newline
+  extern void init_PWM (void);
+Mcommand.c: 1 warning, 0 errors
+compiling Getline.c...
+measure.h(56): warning:  #1-D: last line of file ends without a newline
+  extern void init_PWM (void);
+Getline.c: 1 warning, 0 errors
 linking...
-Program Size: Code=8528 RO-data=956 RW-data=48 ZI-data=1272  
+Program Size: Code=5012 RO-data=32 RW-data=4 ZI-data=1164  
 compiling Retarget.c...
 compiling Serial.c...
 Serial.c(56): warning:  #61-D: integer operation result is out of range
         
 INSEL0 = 
 INSEL0 & (~(0x03 << 30));    /*RDY1->P0.15*/
-Serial.c(176): warning:  #1-D: last line of file ends without a newline
-  */
-Serial.c: 2 warnings, 0 errors
+Serial.c: 1 warning, 0 errors
+compiling Measure.c...
+measure.h(56): warning:  #1-D: last line of file ends without a newline
+  extern void init_PWM (void);
+Measure.c(226): warning:  #111-D: statement is unreachable
+    
+Measure.c(185): warning:  #177-D: variable "DATA_BUF"  was declared but never referenced
+        unsigned char DATA_BUF = 0x00;
+Measure.c: 3 warnings, 0 errors
+compiling Mcommand.c...
+measure.h(56): warning:  #1-D: last line of file ends without a newline
+  extern void init_PWM (void);
+Mcommand.c: 1 warning, 0 errors
+compiling Getline.c...
+measure.h(56): warning:  #1-D: last line of file ends without a newline
+  extern void init_PWM (void);
+Getline.c: 1 warning, 0 errors
 linking...
-Program Size: Code=8528 RO-data=956 RW-data=48 ZI-data=1272  
+Program Size: Code=5012 RO-data=32 RW-data=4 ZI-data=1164  
 FromELF: creating hex file...
-".\Obj\Measure.axf" - 0 Error(s), 2 Warning(s).
+".\Obj\Measure.axf" - 0 Error(s), 6 Warning(s).
 *** Completed Cross-Module-Optimization after 3 iteration(s).
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:04
 </pre>
 </body>
 </html>
