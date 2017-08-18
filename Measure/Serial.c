@@ -36,7 +36,7 @@ void init_serial (void)  {
   U1DLL = 97;                            /* 9600 Baud Rate @ 12MHz VPB Clock  */
   U1LCR = 0x03;                          /* DLAB = 0                          */
 
-	/*---------------------------------SPI0-----------------------------------------------*/
+/*---------------------------------SPI0-----------------------------------------------*/
 	PINSEL0 = (PINSEL0 & 0xFFFF00FF) | 0x15<<8; /*SPI0 PIN SEL*/
 	S0SPCR = 0x00|(0 << 3)|(1 << 4)|(1 << 5)|(0 << 6)|(0 << 7);  /*Master mode*/
 	S0SPCCR = 0x00 | 0x1<<5; /*SPI Clock Counter: PCLK / SnSPCCR*/
@@ -148,20 +148,40 @@ void AD7738_read(unsigned char Register,unsigned char *data)
 	IOSET0 = IOSET0 | 0x1<<20;    /*CS1/SSEL1 set HIGHT*/
 }
 
-void AD7738_read_continue(unsigned char Register,unsigned int *data)
+void AD7738_read_channel_data(unsigned char Register,unsigned char *buf0,unsigned char *buf1,unsigned char *buf2)
 {
+	*buf0 = 0;
+	*buf1 = 0;
+	*buf2 = 0;
+	
 	IOCLR0 = IOCLR0 | 0x1<<20;		/*CS1/SSEL1 set LOW*/
 	
 	SPI0_SendDate(1<<6|(0x3F & Register));
- 	*data = SPI0_SendDate(0x00)<<16;
-	*data |= SPI0_SendDate(0x00)<<8;
-	*data |= SPI0_SendDate(0x00);
+	
+	IOSET0 = IOSET0 | 0x1<<20;    /*CS1/SSEL1 set HIGHT*/
+	DelayNS(100);
+	IOCLR0 = IOCLR0 | 0x1<<20;		/*CS1/SSEL1 set LOW*/
+	
+ 	*buf0 = SPI0_SendDate(0x00);
+	
+	IOSET0 = IOSET0 | 0x1<<20;    /*CS1/SSEL1 set HIGHT*/
+	DelayNS(100);
+	IOCLR0 = IOCLR0 | 0x1<<20;		/*CS1/SSEL1 set LOW*/
+	
+	*buf1 = SPI0_SendDate(0x00);
+	
+	IOSET0 = IOSET0 | 0x1<<20;    /*CS1/SSEL1 set HIGHT*/
+	DelayNS(100);
+	IOCLR0 = IOCLR0 | 0x1<<20;		/*CS1/SSEL1 set LOW*/
+	
+	*buf2 = SPI0_SendDate(0x00);
 	
 	IOSET0 = IOSET0 | 0x1<<20;    /*CS1/SSEL1 set HIGHT*/
 }
 
-void AD7738_SET(void)
+void AD7738_SET(unsigned char channel)
 {
+//	unsigned char IO_Port_Reg = 0;
 	IOCLR0 = IOCLR0 | 0x1<<20;		/*CS1/SSEL1 set LOW*/
 	SPI0_SendDate(0x00);		/*RESET AD7738*/
 	SPI0_SendDate(0xFF);
@@ -170,11 +190,27 @@ void AD7738_SET(void)
 	SPI0_SendDate(0xFF);
 	IOSET0 = IOSET0 | 0x1<<20;		/*CS1/SSEL1 set HIGHT*/
 	
-	DelayNS(10);
+	DelayNS(100);
 	
-	AD7738_write(0x29,0<<7|0<<6|0<<5|0<<4|1<<3|0x4);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
-	AD7738_write(0x31,1<<7|0x2E);	/*channel coversion time*/
-	AD7738_write(0x39,0x2<<5|1<<4|0<<3|0<<2|1<<1|0);		/*Mode Register: Mod2_0|CLKDIS|DUMP|CONT_RD|24_16|CLAMP*/
+//	AD7738_read(0x01,&IO_Port_Reg);
+//	AD7738_write(0x01,IO_Port_Reg | 1<<3);
+		AD7738_write(0x29,0<<7|1<<6|1<<5|0<<4|0<<3|NP_25);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
+		AD7738_write(0x31,0x91);	/*channel coversion time*/
+		AD7738_write(0x39,0x2<<5|1<<4|0<<3|0<<2|1<<1|1);		/*Mode Register: Mod2_0|CLKDIS|DUMP|CONT_RD|24_16|CLAMP*/
+//	switch (channel){
+//		case 1:
+//			AD7738_write(0x29,0<<7|1<<6|1<<5|0<<4|0<<3|NP_25);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
+//			AD7738_write(0x31,0x91);	/*channel coversion time*/
+//			AD7738_write(0x39,0x2<<5|1<<4|0<<3|0<<2|1<<1|1);		/*Mode Register: Mod2_0|CLKDIS|DUMP|CONT_RD|24_16|CLAMP*/
+//		break;
+//		case 2:
+//			AD7738_write(0x2A,0<<7|1<<6|1<<5|0<<4|0<<3|NP_25);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
+//			AD7738_write(0x32,0x91);	/*channel coversion time*/
+//			AD7738_write(0x3A,0x2<<5|1<<4|0<<3|0<<2|1<<1|1);		/*Mode Register: Mod2_0|CLKDIS|DUMP|CONT_RD|24_16|CLAMP*/
+//		break;
+//		
+//		default: break;
+//	}
 }
 
 void AD7738_READ_isr (void) 
@@ -189,9 +225,46 @@ void init_PWM (void)
   
   PWMPCR = 0x1<<13;                      /* PWM channel 5 single edge control, output enabled */
   PWMMCR = 1<<1;                      /* PWMMR0/PWMMR5 On match with timer reset the counter */
-  PWMMR0 = 100;                           /* PWMMR0       */
-  PWMMR5 = 50;                               /* PWMMR5    */
+  PWMMR0 = 1000;                           /* PWMMR0       */
+  PWMMR5 = 500;                               /* PWMMR5    */
   PWMLER = 0xF;                             /* enable shadow latch for match 1 - 3   */ 
   PWMTCR = 0x00000002;                      /* Reset counter and prescaler           */ 
   PWMTCR = 0x00000009;                      /* enable counter and PWM, release counter from reset */
+}
+
+int DAC_SET_Chanel_Din(float temperature)
+{
+	float DAC_Temp_Slope = ((60900-60800)/(43.3-41.9)+(61100-60900)/(46.36-43.3)+(61300-61100)/(49.5-46.36))/3;
+	return DAC_Temp_Slope*temperature + (60900-DAC_Temp_Slope*43.3);
+}
+
+void Temperature_of_resistance_Parameter(unsigned char A,unsigned char B,unsigned char C)
+{
+	float AD7738_resolution = 8388607/2500;
+	float current_sensor = 5.01;
+	float resistance = 0;
+	float Temp_resistance_slope = ((388.3-369.8)/(85-65)+(369.8-351.7)/(65-45)+(351.7-334.5)/(45-25))/3;
+	float Temp = 0;
+
+	resistance = (A<<16|B<<8|C)/AD7738_resolution/current_sensor;
+	Temp = (resistance-(369.8-Temp_resistance_slope*65))/Temp_resistance_slope;
+	
+//	printf("Temp=%.2f\nresistance=%.2f\n\n",Temp,resistance);
+	printf("%.2f\n",Temp);
+	
+}
+
+void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C)
+{
+	float AD7738_resolution = 8388607/1250;
+	float current_sensor = 0.75;
+	float resistance = 0;
+	float Hydrogen_resistance_slope = ((float)(658-645)/(85-65)+(float)(645-631)/(65-45)+(float)(631-616)/(45-25))/3;
+	float Temp = 45;
+	float R = 0;
+
+	resistance = (A<<16|B<<8|C)/AD7738_resolution/current_sensor;
+	R = Hydrogen_resistance_slope*Temp + (645-65*Hydrogen_resistance_slope);
+	
+	printf("%.2f : %.2f\n",resistance,R);
 }

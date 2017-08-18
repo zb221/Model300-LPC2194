@@ -183,7 +183,11 @@ int main (void)  {                             /* main entry for program      */
   int i;                                       /* index for command buffer    */
   int idx;                                     /* index for circular buffer   */
 	unsigned char DATA_BUF = 0x00;
-  unsigned int data = 0;
+  unsigned char data0 = 0;
+	unsigned char data1 = 0;
+	unsigned char data2 = 0;
+
+	int DAC_Din = 0;
 
   PINSEL1 = 0x15400000;                        /* Select AIN0..AIN3           */
   IODIR1  = 0xFF0000;                          /* P1.16..23 defined as Outputs*/
@@ -191,35 +195,49 @@ int main (void)  {                             /* main entry for program      */
 
   init_serial ();                              /* initialite serial interface */
 
-	printf("PCON:0x%x\n",PCON);
-	printf("PCSPI0:%d,PCSPI1:%d,PCSSP:%d\n",((PCONP|0x0<<8)>>8)&0x1,((PCONP|0x0<<10)>>10)&0x1,((PCONP|0x0<<21))>>21)&0x1;
+//	printf("PCON:0x%x\n",PCON);
+//	printf("PCSPI0:%d,PCSPI1:%d,PCSSP:%d\n",((PCONP|0x0<<8)>>8)&0x1,((PCONP|0x0<<10)>>10)&0x1,((PCONP|0x0<<21))>>21)&0x1;
 	
 	AD7738_CS_INIT();
-//	M25P16_CS_INIT();
 	DAC8568_CS_INIT();
 
  	init_PWM();
 	
-	DAC8568_SET(0x0,0x9,0x0,0xA000,0);		/*Power up internal reference all the time regardless DAC states*/	
-	DAC8568_SET(0x0,0x3,0x6,0x1000,0);		/*DAC-G*/
+	DAC_Din = DAC_SET_Chanel_Din(45); /*set want temp value*/
+	DAC_Din = 13107*2.5;
+	printf("%d ",DAC_Din);
+	
+	DAC8568_SET(0x0,0x9,0x0,0xA000,0);		/*Power up internal reference all the time regardless DAC states*/
+	DAC8568_SET(0x0,0x3,0x2,0x0000,0);		/*DAC-C*/
+	DAC8568_SET(0x0,0x3,0x6,DAC_Din,0);		/*DAC-G*/
+	
+
 
 while(1){
-	data = 0;
 	DelayNS(500);
 
-	AD7738_SET();
-	DelayNS(100);
+	AD7738_SET(1);
+		AD7738_read(0x29,&DATA_BUF);
+	printf("AD7738 29h : 0x%x\n",DATA_BUF);
+		AD7738_read(0x38,&DATA_BUF);
+	printf("AD7738 39h : 0x%x\n",DATA_BUF);
+
+	while(IO0PIN & 0x1<<15);		/*wait RDY goes LOW*/
 	
 //	AD7738_read(0x21,&DATA_BUF);
 //	printf("AD7738 21h : 0x%x\n",DATA_BUF);
-//	
-//	AD7738_read(0x04,&DATA_BUF);
-//	printf("AD7738 04h : 0x%x\n",DATA_BUF);
-	while(IO0PIN & 0x1<<15);		/*wait RDY goes LOW*/
 	
-	AD7738_read_continue(0x09,&data);	/*09h: Data Register*/	
-	printf("AD7738 09h : %d\n\n\n",data);
-
+  AD7738_read_channel_data(0x09,&data0,&data1,&data2);	/*09h: Data Register*/
+	printf("AD7738=%d ->%.2f\n",(data0<<16|data1<<8|data2),(data0<<16|data1<<8|data2)/(float)(8388607/2500));
+	Temperature_of_resistance_Parameter(data0,data1,data2);
+	
+	
+//	AD7738_SET(2);
+//	while(IO0PIN & 0x1<<15);
+//	AD7738_read_channel_data(0x0A,&data0,&data1,&data2);	/*0Ah: Data Register*/
+//	Hydrogen_Resistance_Parameter(data0,data1,data2);
+//	printf("AD7738=%d ->%.2f\n",(data0<<16|data1<<8|data2),(data0<<16|data1<<8|data2)/(float)(8388607/2500));
+	
 }
 
   /* setup the timer counter 0 interrupt */
