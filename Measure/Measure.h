@@ -55,6 +55,6 @@ extern void AD7738_SET(unsigned char channel);
 extern void AD7738_read_channel_data(unsigned char Register,unsigned char *buf0,unsigned char *buf1,unsigned char *buf2);
 extern void init_PWM (void);
 
-extern int DAC_SET_Chanel_Din(float temperature);
+extern void DAC_SET_Chanel_Din(float temperature,int *DAC_DIN);
 extern void Temperature_of_resistance_Parameter(unsigned char A,unsigned char B,unsigned char C);
-extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C);
+extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C,unsigned char temperature);

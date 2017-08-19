@@ -34,102 +34,108 @@ compiling Retarget.c...
 compiling Serial.c...
 AD7738.h(16): warning:  #1-D: last line of file ends without a newline
   #define AINx_AINCOM 0x0<<5
-Serial.c(56): warning:  #61-D: integer operation result is out of range
+Serial.c(65): warning:  #61-D: integer operation result is out of range
         
 INSEL0 = 
 INSEL0 & (~(0x03 << 30));    /*RDY1->P0.15*/
-Serial.c(253): warning:  #223-D: function "printf" declared implicitly
-        printf("%.2f\n",Temp);
+Serial.c(256): warning:  #223-D: function "printf" declared implicitly
+        printf("%.2f %.2f\n\n",Temp,resistance);
 Serial.c(269): warning:  #223-D: function "printf" declared implicitly
-        printf("%.2f : %.2f\n",resistance,R);
+        printf("%.2f : %.2f\n\n",resistance,R);
 Serial.c(270): warning:  #1-D: last line of file ends without a newline
   }
 Serial.c: 5 warnings, 0 errors
 compiling Measure.c...
 measure.h(60): warning:  #1-D: last line of file ends without a newline
-  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C);
-Measure.c(244): warning:  #111-D: statement is unreachable
+  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C,unsigned char temperature);
+Measure.c(236): warning:  #111-D: statement is unreachable
     
-Measure.c: 2 warnings, 0 errors
+Measure.c(185): warning:  #177-D: variable "DATA_BUF"  was declared but never referenced
+        unsigned char DATA_BUF = 0x00;
+Measure.c: 3 warnings, 0 errors
 compiling Mcommand.c...
 measure.h(60): warning:  #1-D: last line of file ends without a newline
-  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C);
+  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C,unsigned char temperature);
 Mcommand.c: 1 warning, 0 errors
 compiling Getline.c...
 measure.h(60): warning:  #1-D: last line of file ends without a newline
-  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C);
+  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C,unsigned char temperature);
 Getline.c: 1 warning, 0 errors
 linking...
-Program Size: Code=6420 RO-data=32 RW-data=48 ZI-data=1272  
-".\Obj\Measure.axf" - 0 Error(s), 9 Warning(s).
+Program Size: Code=6532 RO-data=32 RW-data=76 ZI-data=1276  
+".\Obj\Measure.axf" - 0 Error(s), 10 Warning(s).
 
 *** Performing Cross-Module-Optimization:
 compiling Retarget.c...
 compiling Serial.c...
 AD7738.h(16): warning:  #1-D: last line of file ends without a newline
   #define AINx_AINCOM 0x0<<5
-Serial.c(56): warning:  #61-D: integer operation result is out of range
+Serial.c(65): warning:  #61-D: integer operation result is out of range
         
 INSEL0 = 
 INSEL0 & (~(0x03 << 30));    /*RDY1->P0.15*/
-Serial.c(253): warning:  #223-D: function "printf" declared implicitly
-        printf("%.2f\n",Temp);
+Serial.c(256): warning:  #223-D: function "printf" declared implicitly
+        printf("%.2f %.2f\n\n",Temp,resistance);
 Serial.c(269): warning:  #223-D: function "printf" declared implicitly
-        printf("%.2f : %.2f\n",resistance,R);
+        printf("%.2f : %.2f\n\n",resistance,R);
 Serial.c(270): warning:  #1-D: last line of file ends without a newline
   }
 Serial.c: 5 warnings, 0 errors
 compiling Measure.c...
 measure.h(60): warning:  #1-D: last line of file ends without a newline
-  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C);
-Measure.c(244): warning:  #111-D: statement is unreachable
+  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C,unsigned char temperature);
+Measure.c(236): warning:  #111-D: statement is unreachable
     
-Measure.c: 2 warnings, 0 errors
+Measure.c(185): warning:  #177-D: variable "DATA_BUF"  was declared but never referenced
+        unsigned char DATA_BUF = 0x00;
+Measure.c: 3 warnings, 0 errors
 compiling Mcommand.c...
 measure.h(60): warning:  #1-D: last line of file ends without a newline
-  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C);
+  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C,unsigned char temperature);
 Mcommand.c: 1 warning, 0 errors
 compiling Getline.c...
 measure.h(60): warning:  #1-D: last line of file ends without a newline
-  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C);
+  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C,unsigned char temperature);
 Getline.c: 1 warning, 0 errors
 linking...
-Program Size: Code=5976 RO-data=32 RW-data=4 ZI-data=1164  
+Program Size: Code=6344 RO-data=32 RW-data=32 ZI-data=1160  
 compiling Retarget.c...
 compiling Serial.c...
 AD7738.h(16): warning:  #1-D: last line of file ends without a newline
   #define AINx_AINCOM 0x0<<5
-Serial.c(56): warning:  #61-D: integer operation result is out of range
+Serial.c(65): warning:  #61-D: integer operation result is out of range
         
 INSEL0 = 
 INSEL0 & (~(0x03 << 30));    /*RDY1->P0.15*/
-Serial.c(253): warning:  #223-D: function "printf" declared implicitly
-        printf("%.2f\n",Temp);
+Serial.c(256): warning:  #223-D: function "printf" declared implicitly
+        printf("%.2f %.2f\n\n",Temp,resistance);
 Serial.c(269): warning:  #223-D: function "printf" declared implicitly
-        printf("%.2f : %.2f\n",resistance,R);
+        printf("%.2f : %.2f\n\n",resistance,R);
 Serial.c(270): warning:  #1-D: last line of file ends without a newline
   }
 Serial.c: 5 warnings, 0 errors
 compiling Measure.c...
 measure.h(60): warning:  #1-D: last line of file ends without a newline
-  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C);
-Measure.c(244): warning:  #111-D: statement is unreachable
+  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C,unsigned char temperature);
+Measure.c(236): warning:  #111-D: statement is unreachable
     
-Measure.c: 2 warnings, 0 errors
+Measure.c(185): warning:  #177-D: variable "DATA_BUF"  was declared but never referenced
+        unsigned char DATA_BUF = 0x00;
+Measure.c: 3 warnings, 0 errors
 compiling Mcommand.c...
 measure.h(60): warning:  #1-D: last line of file ends without a newline
-  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C);
+  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C,unsigned char temperature);
 Mcommand.c: 1 warning, 0 errors
 compiling Getline.c...
 measure.h(60): warning:  #1-D: last line of file ends without a newline
-  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C);
+  extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C,unsigned char temperature);
 Getline.c: 1 warning, 0 errors
 linking...
-Program Size: Code=5976 RO-data=32 RW-data=4 ZI-data=1164  
+Program Size: Code=6344 RO-data=32 RW-data=32 ZI-data=1160  
 FromELF: creating hex file...
-".\Obj\Measure.axf" - 0 Error(s), 9 Warning(s).
+".\Obj\Measure.axf" - 0 Error(s), 10 Warning(s).
 *** Completed Cross-Module-Optimization after 3 iteration(s).
-Build Time Elapsed:  00:00:04
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>

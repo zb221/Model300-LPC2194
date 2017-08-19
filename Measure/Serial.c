@@ -13,6 +13,15 @@
 
 #define CR     0x0D
 
+	float Temp_resistance_slope = ((388.3-369.8)/(85-65)+(369.8-351.7)/(65-45)+(351.7-334.5)/(45-25))/3;
+	float Hydrogen_resistance_slope = ((float)(658-645)/(85-65)+(float)(645-631)/(65-45)+(float)(631-616)/(45-25))/3;
+	float DAC_Din_Temp_slope =  (57670-56360)/(75.45-53.2);
+	float AD7738_resolution = 8388607/2500;
+	float AD7738_resolution_NP_125 = 8388607/1250;
+	float Current_of_Temperature_resistance = 5.01;
+	float Current_of_Hydrogen_Resistance = 0.75;
+
+
 /*********************************************************************************************************
 ** Function name:		DelayNS
 ** Descriptions:		ns delay
@@ -191,26 +200,23 @@ void AD7738_SET(unsigned char channel)
 	IOSET0 = IOSET0 | 0x1<<20;		/*CS1/SSEL1 set HIGHT*/
 	
 	DelayNS(100);
-	
-//	AD7738_read(0x01,&IO_Port_Reg);
-//	AD7738_write(0x01,IO_Port_Reg | 1<<3);
-		AD7738_write(0x29,0<<7|1<<6|1<<5|0<<4|0<<3|NP_25);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
-		AD7738_write(0x31,0x91);	/*channel coversion time*/
-		AD7738_write(0x39,0x2<<5|1<<4|0<<3|0<<2|1<<1|1);		/*Mode Register: Mod2_0|CLKDIS|DUMP|CONT_RD|24_16|CLAMP*/
-//	switch (channel){
-//		case 1:
-//			AD7738_write(0x29,0<<7|1<<6|1<<5|0<<4|0<<3|NP_25);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
-//			AD7738_write(0x31,0x91);	/*channel coversion time*/
-//			AD7738_write(0x39,0x2<<5|1<<4|0<<3|0<<2|1<<1|1);		/*Mode Register: Mod2_0|CLKDIS|DUMP|CONT_RD|24_16|CLAMP*/
-//		break;
-//		case 2:
-//			AD7738_write(0x2A,0<<7|1<<6|1<<5|0<<4|0<<3|NP_25);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
-//			AD7738_write(0x32,0x91);	/*channel coversion time*/
-//			AD7738_write(0x3A,0x2<<5|1<<4|0<<3|0<<2|1<<1|1);		/*Mode Register: Mod2_0|CLKDIS|DUMP|CONT_RD|24_16|CLAMP*/
-//		break;
-//		
-//		default: break;
-//	}
+
+	switch (channel){
+		case 1:
+			AD7738_write(0x29,0<<7|1<<6|1<<5|0<<4|0<<3|NP_25);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
+			AD7738_write(0x31,0x91);	/*channel coversion time*/
+			AD7738_write(0x39,0x2<<5|1<<4|0<<3|0<<2|1<<1|1);		/*Mode Register: Mod2_0|CLKDIS|DUMP|CONT_RD|24_16|CLAMP*/
+//		printf("set and start channel %d OK\n",channel);
+		break;
+		case 2:
+			AD7738_write(0x2A,0<<7|1<<6|1<<5|0<<4|0<<3|NP_125);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
+			AD7738_write(0x32,0x91);	/*channel coversion time*/
+			AD7738_write(0x3A,0x2<<5|1<<4|0<<3|0<<2|1<<1|1);		/*Mode Register: Mod2_0|CLKDIS|DUMP|CONT_RD|24_16|CLAMP*/
+//		printf("Set and Start channel %d OK\n",channel);
+		break;
+		
+		default: break;
+	}
 }
 
 void AD7738_READ_isr (void) 
@@ -232,39 +238,33 @@ void init_PWM (void)
   PWMTCR = 0x00000009;                      /* enable counter and PWM, release counter from reset */
 }
 
-int DAC_SET_Chanel_Din(float temperature)
+void DAC_SET_Chanel_Din(float temperature,int *DAC_DIN)
 {
-	float DAC_Temp_Slope = ((60900-60800)/(43.3-41.9)+(61100-60900)/(46.36-43.3)+(61300-61100)/(49.5-46.36))/3;
-	return DAC_Temp_Slope*temperature + (60900-DAC_Temp_Slope*43.3);
+//	*DAC_DIN = 13107*Current_of_Temperature_resistance*(temperature*Temp_resistance_slope + (369.8-Temp_resistance_slope*65));
+	*DAC_DIN = DAC_Din_Temp_slope*temperature + (57670-(DAC_Din_Temp_slope*75.45));
+
 }
 
 void Temperature_of_resistance_Parameter(unsigned char A,unsigned char B,unsigned char C)
 {
-	float AD7738_resolution = 8388607/2500;
-	float current_sensor = 5.01;
 	float resistance = 0;
-	float Temp_resistance_slope = ((388.3-369.8)/(85-65)+(369.8-351.7)/(65-45)+(351.7-334.5)/(45-25))/3;
 	float Temp = 0;
 
-	resistance = (A<<16|B<<8|C)/AD7738_resolution/current_sensor;
+	resistance = (A<<16|B<<8|C)/AD7738_resolution/Current_of_Temperature_resistance;
 	Temp = (resistance-(369.8-Temp_resistance_slope*65))/Temp_resistance_slope;
 	
-//	printf("Temp=%.2f\nresistance=%.2f\n\n",Temp,resistance);
-	printf("%.2f\n",Temp);
+	printf("%.2f %.2f\n\n",Temp,resistance);
 	
 }
 
-void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C)
+void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C,unsigned char temperature)
 {
-	float AD7738_resolution = 8388607/1250;
-	float current_sensor = 0.75;
 	float resistance = 0;
-	float Hydrogen_resistance_slope = ((float)(658-645)/(85-65)+(float)(645-631)/(65-45)+(float)(631-616)/(45-25))/3;
-	float Temp = 45;
+
 	float R = 0;
 
-	resistance = (A<<16|B<<8|C)/AD7738_resolution/current_sensor;
-	R = Hydrogen_resistance_slope*Temp + (645-65*Hydrogen_resistance_slope);
+	resistance = (A<<16|B<<8|C)/AD7738_resolution_NP_125/Current_of_Hydrogen_Resistance;
+	R = Hydrogen_resistance_slope*temperature + (645-65*Hydrogen_resistance_slope);
 	
-	printf("%.2f : %.2f\n",resistance,R);
+	printf("%.2f : %.2f\n\n",resistance,R);
 }

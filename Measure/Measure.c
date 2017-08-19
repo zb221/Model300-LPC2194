@@ -179,15 +179,16 @@ static void clear_records (void) {
 /***************************      MAIN PROGRAM      ***************************/
 /******************************************************************************/
 int main (void)  {                             /* main entry for program      */
-  char cmdbuf [15];                            /* command input buffer        */
-  int i;                                       /* index for command buffer    */
-  int idx;                                     /* index for circular buffer   */
+	char cmdbuf [15];                            /* command input buffer        */
+	int i;                                       /* index for command buffer    */
+	int idx;                                     /* index for circular buffer   */
 	unsigned char DATA_BUF = 0x00;
-  unsigned char data0 = 0;
+	unsigned char data0 = 0;
 	unsigned char data1 = 0;
 	unsigned char data2 = 0;
 
 	int DAC_Din = 0;
+	unsigned char temperature = 75;
 
   PINSEL1 = 0x15400000;                        /* Select AIN0..AIN3           */
   IODIR1  = 0xFF0000;                          /* P1.16..23 defined as Outputs*/
@@ -203,39 +204,30 @@ int main (void)  {                             /* main entry for program      */
 
  	init_PWM();
 	
-	DAC_Din = DAC_SET_Chanel_Din(45); /*set want temp value*/
-	DAC_Din = 13107*2.5;
+	DAC_SET_Chanel_Din(temperature,&DAC_Din); /*set want temp value*/
 	printf("%d ",DAC_Din);
 	
 	DAC8568_SET(0x0,0x9,0x0,0xA000,0);		/*Power up internal reference all the time regardless DAC states*/
-	DAC8568_SET(0x0,0x3,0x2,0x0000,0);		/*DAC-C*/
+	DAC8568_SET(0x0,0x3,0x2,0x8000,0);		/*DAC-C*/
 	DAC8568_SET(0x0,0x3,0x6,DAC_Din,0);		/*DAC-G*/
 	
 
 
 while(1){
-	DelayNS(500);
+	DelayNS(250);
 
 	AD7738_SET(1);
-		AD7738_read(0x29,&DATA_BUF);
-	printf("AD7738 29h : 0x%x\n",DATA_BUF);
-		AD7738_read(0x38,&DATA_BUF);
-	printf("AD7738 39h : 0x%x\n",DATA_BUF);
-
 	while(IO0PIN & 0x1<<15);		/*wait RDY goes LOW*/
-	
-//	AD7738_read(0x21,&DATA_BUF);
-//	printf("AD7738 21h : 0x%x\n",DATA_BUF);
-	
-  AD7738_read_channel_data(0x09,&data0,&data1,&data2);	/*09h: Data Register*/
-	printf("AD7738=%d ->%.2f\n",(data0<<16|data1<<8|data2),(data0<<16|data1<<8|data2)/(float)(8388607/2500));
+	AD7738_read_channel_data(0x09,&data0,&data1,&data2);	/*09h: Data Register*/
+	printf("channel_1=%d ->%.2f\n",(data0<<16|data1<<8|data2),(data0<<16|data1<<8|data2)/(float)(8388607/2500));
 	Temperature_of_resistance_Parameter(data0,data1,data2);
 	
-	
-//	AD7738_SET(2);
-//	while(IO0PIN & 0x1<<15);
-//	AD7738_read_channel_data(0x0A,&data0,&data1,&data2);	/*0Ah: Data Register*/
-//	Hydrogen_Resistance_Parameter(data0,data1,data2);
+	DelayNS(250);
+	AD7738_SET(2);
+	while(IO0PIN & 0x1<<15);
+	AD7738_read_channel_data(0x0A,&data0,&data1,&data2);	/*0Ah: Data Register*/
+	printf("channel_2=%d ->%.2f\n",(data0<<16|data1<<8|data2),(data0<<16|data1<<8|data2)/(float)(8388607/1250));
+	Hydrogen_Resistance_Parameter(data0,data1,data2,temperature);
 //	printf("AD7738=%d ->%.2f\n",(data0<<16|data1<<8|data2),(data0<<16|data1<<8|data2)/(float)(8388607/2500));
 	
 }
