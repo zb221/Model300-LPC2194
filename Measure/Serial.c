@@ -15,11 +15,11 @@
 
 	float Temp_resistance_slope = ((388.3-369.8)/(85-65)+(369.8-351.7)/(65-45)+(351.7-334.5)/(45-25))/3;
 	float Hydrogen_resistance_slope = ((float)(658-645)/(85-65)+(float)(645-631)/(65-45)+(float)(631-616)/(45-25))/3;
-	float DAC_Din_Temp_slope =  (57670-56360)/(75.45-53.2);
+	float DAC_Din_Temp_slope =  ((57643-57054)/(74.85-64.85)+(57054-56465)/(64.85-54.80))/2;
 	float AD7738_resolution = 8388607/2500;
 	float AD7738_resolution_NP_125 = 8388607/1250;
 	float Current_of_Temperature_resistance = 5.01;
-	float Current_of_Hydrogen_Resistance = 0.75;
+	float Current_of_Hydrogen_Resistance = 0.755;
 
 
 /*********************************************************************************************************
@@ -167,30 +167,30 @@ void AD7738_read_channel_data(unsigned char Register,unsigned char *buf0,unsigne
 	
 	SPI0_SendDate(1<<6|(0x3F & Register));
 	
-	IOSET0 = IOSET0 | 0x1<<20;    /*CS1/SSEL1 set HIGHT*/
-	DelayNS(100);
-	IOCLR0 = IOCLR0 | 0x1<<20;		/*CS1/SSEL1 set LOW*/
+//	IOSET0 = IOSET0 | 0x1<<20;    /*CS1/SSEL1 set HIGHT*/
+//	DelayNS(100);
+//	IOCLR0 = IOCLR0 | 0x1<<20;		/*CS1/SSEL1 set LOW*/
 	
  	*buf0 = SPI0_SendDate(0x00);
 	
-	IOSET0 = IOSET0 | 0x1<<20;    /*CS1/SSEL1 set HIGHT*/
-	DelayNS(100);
-	IOCLR0 = IOCLR0 | 0x1<<20;		/*CS1/SSEL1 set LOW*/
+//	IOSET0 = IOSET0 | 0x1<<20;    /*CS1/SSEL1 set HIGHT*/
+//	DelayNS(100);
+//	IOCLR0 = IOCLR0 | 0x1<<20;		/*CS1/SSEL1 set LOW*/
 	
 	*buf1 = SPI0_SendDate(0x00);
 	
-	IOSET0 = IOSET0 | 0x1<<20;    /*CS1/SSEL1 set HIGHT*/
-	DelayNS(100);
-	IOCLR0 = IOCLR0 | 0x1<<20;		/*CS1/SSEL1 set LOW*/
+//	IOSET0 = IOSET0 | 0x1<<20;    /*CS1/SSEL1 set HIGHT*/
+//	DelayNS(100);
+//	IOCLR0 = IOCLR0 | 0x1<<20;		/*CS1/SSEL1 set LOW*/
 	
 	*buf2 = SPI0_SendDate(0x00);
 	
 	IOSET0 = IOSET0 | 0x1<<20;    /*CS1/SSEL1 set HIGHT*/
 }
 
-void AD7738_SET(unsigned char channel)
+void AD7738_SET(void)
 {
-//	unsigned char IO_Port_Reg = 0;
+	unsigned char IO_Port_Reg = 0;
 	IOCLR0 = IOCLR0 | 0x1<<20;		/*CS1/SSEL1 set LOW*/
 	SPI0_SendDate(0x00);		/*RESET AD7738*/
 	SPI0_SendDate(0xFF);
@@ -200,23 +200,22 @@ void AD7738_SET(unsigned char channel)
 	IOSET0 = IOSET0 | 0x1<<20;		/*CS1/SSEL1 set HIGHT*/
 	
 	DelayNS(100);
+	
+/*-----------------------------------------------set common register of AD7738-----------------------------------------------------*/
+	AD7738_read(IO_PORT_REG,&IO_Port_Reg);
+	AD7738_write(IO_PORT_REG,IO_Port_Reg|1<<3);
 
-	switch (channel){
-		case 1:
-			AD7738_write(0x29,0<<7|1<<6|1<<5|0<<4|0<<3|NP_25);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
-			AD7738_write(0x31,0x91);	/*channel coversion time*/
-			AD7738_write(0x39,0x2<<5|1<<4|0<<3|0<<2|1<<1|1);		/*Mode Register: Mod2_0|CLKDIS|DUMP|CONT_RD|24_16|CLAMP*/
-//		printf("set and start channel %d OK\n",channel);
-		break;
-		case 2:
-			AD7738_write(0x2A,0<<7|1<<6|1<<5|0<<4|0<<3|NP_125);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
-			AD7738_write(0x32,0x91);	/*channel coversion time*/
-			AD7738_write(0x3A,0x2<<5|1<<4|0<<3|0<<2|1<<1|1);		/*Mode Register: Mod2_0|CLKDIS|DUMP|CONT_RD|24_16|CLAMP*/
-//		printf("Set and Start channel %d OK\n",channel);
-		break;
-		
-		default: break;
-	}
+/*----------------------------------------------set channel 1 register of AD7738-----------------------------------------------------*/
+	AD7738_write(0x29,0<<7|1<<6|1<<5|0<<4|1<<3|NP_25);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
+	AD7738_write(0x31,0x91);	/*channel coversion time*/
+
+/*-----------------------------------------------set channel 2 register of AD7738-----------------------------------------------------*/
+	AD7738_write(0x2A,0<<7|1<<6|1<<5|0<<4|1<<3|NP_125);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
+	AD7738_write(0x32,0x91);	/*channel coversion time*/
+
+/*-----------------------------------------------set Mode register of AD7738-----------------------------------------------------*/
+	AD7738_write(0x3A,0x1<<5|1<<4|0<<3|0<<2|1<<1|1);		/*Mode Register: Mod2_0|CLKDIS|DUMP|CONT_RD|24_16|CLAMP*/
+
 }
 
 void AD7738_READ_isr (void) 
@@ -231,8 +230,8 @@ void init_PWM (void)
   
   PWMPCR = 0x1<<13;                      /* PWM channel 5 single edge control, output enabled */
   PWMMCR = 1<<1;                      /* PWMMR0/PWMMR5 On match with timer reset the counter */
-  PWMMR0 = 1000;                           /* PWMMR0       */
-  PWMMR5 = 500;                               /* PWMMR5    */
+  PWMMR0 = 100;                           /* PWMMR0       */
+  PWMMR5 = 50;                               /* PWMMR5    */
   PWMLER = 0xF;                             /* enable shadow latch for match 1 - 3   */ 
   PWMTCR = 0x00000002;                      /* Reset counter and prescaler           */ 
   PWMTCR = 0x00000009;                      /* enable counter and PWM, release counter from reset */
@@ -241,9 +240,20 @@ void init_PWM (void)
 void DAC_SET_Chanel_Din(float temperature,int *DAC_DIN)
 {
 //	*DAC_DIN = 13107*Current_of_Temperature_resistance*(temperature*Temp_resistance_slope + (369.8-Temp_resistance_slope*65));
-	*DAC_DIN = DAC_Din_Temp_slope*temperature + (57670-(DAC_Din_Temp_slope*75.45));
+	*DAC_DIN = DAC_Din_Temp_slope*temperature + (57054-(DAC_Din_Temp_slope*64.85));
 
 }
+
+void DAC8568_INIT_SET(float temperature)
+{
+	int DAC_Din = 0;
+	DAC_SET_Chanel_Din(temperature,&DAC_Din); /*set want temp value*/
+	
+	DAC8568_SET(0x0,0x9,0x0,0xA000,0);		/*Power up internal reference all the time regardless DAC states*/
+	DAC8568_SET(0x0,0x3,0x2,0x8000,0);		/*DAC-C*/
+	DAC8568_SET(0x0,0x3,0x6,DAC_Din,0);		/*DAC-G*/
+}
+
 
 void Temperature_of_resistance_Parameter(unsigned char A,unsigned char B,unsigned char C)
 {
@@ -252,19 +262,47 @@ void Temperature_of_resistance_Parameter(unsigned char A,unsigned char B,unsigne
 
 	resistance = (A<<16|B<<8|C)/AD7738_resolution/Current_of_Temperature_resistance;
 	Temp = (resistance-(369.8-Temp_resistance_slope*65))/Temp_resistance_slope;
-	
-	printf("%.2f %.2f\n\n",Temp,resistance);
+#ifdef DEGUG	
+	printf("Temperature_of_resistance:\n %.2f %.2f\n\n",Temp,resistance);
+#endif
+	printf("Temperature_of_resistance:\n %.2f\n\n",resistance);
 	
 }
 
 void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C,unsigned char temperature)
 {
 	float resistance = 0;
-
 	float R = 0;
 
 	resistance = (A<<16|B<<8|C)/AD7738_resolution_NP_125/Current_of_Hydrogen_Resistance;
 	R = Hydrogen_resistance_slope*temperature + (645-65*Hydrogen_resistance_slope);
+#ifdef DEGUG	
+	printf("Hydrogen_Resistance:\n %.2f : %.2f\n\n",resistance,R);
+#endif
+	printf("Hydrogen_Resistance:\n %.2f\n\n",resistance);
+}
+
+void TEST_SENSE(unsigned char temperature)
+{
+	unsigned char data0 = 0;
+	unsigned char data1 = 0;
+	unsigned char data2 = 0;
 	
-	printf("%.2f : %.2f\n\n",resistance,R);
+	DelayNS(300);
+	
+	while(IO0PIN & 0x1<<15);		/*wait RDY goes LOW*/
+	
+	AD7738_read_channel_data(0x09,&data0,&data1,&data2);	/*09h: Data Register*/
+#ifdef DEGUG
+	printf("channel_1=%d ->%.2f\n",(data0<<16|data1<<8|data2),(data0<<16|data1<<8|data2)/AD7738_resolution);
+#endif
+	Temperature_of_resistance_Parameter(data0,data1,data2);
+
+	DelayNS(300);
+
+	AD7738_read_channel_data(0x0A,&data0,&data1,&data2);	/*0Ah: Data Register*/
+#ifdef DEGUG
+	printf("channel_2=%d ->%.2f\n",(data0<<16|data1<<8|data2),(data0<<16|data1<<8|data2)/AD7738_resolution_NP_125);
+#endif
+	Hydrogen_Resistance_Parameter(data0,data1,data2,temperature);
 }

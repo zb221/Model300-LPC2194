@@ -51,10 +51,12 @@ extern void DAC8568_SET(unsigned char PB,unsigned char CB,unsigned char AB,unsig
 extern void AD7738_read(unsigned char Register,unsigned char *data);
 extern void AD7738_write(unsigned char Register,unsigned char data);
 extern unsigned char M25P16_SET(unsigned char Instruction,unsigned char data);
-extern void AD7738_SET(unsigned char channel);
+extern void AD7738_SET(void);
 extern void AD7738_read_channel_data(unsigned char Register,unsigned char *buf0,unsigned char *buf1,unsigned char *buf2);
 extern void init_PWM (void);
 
 extern void DAC_SET_Chanel_Din(float temperature,int *DAC_DIN);
 extern void Temperature_of_resistance_Parameter(unsigned char A,unsigned char B,unsigned char C);
 extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C,unsigned char temperature);
+extern void DAC8568_INIT_SET(float temperature);
+extern void TEST_SENSE(unsigned char temperature);

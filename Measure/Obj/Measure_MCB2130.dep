@@ -5,19 +5,19 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x57F606B8)
 I (C:\Keil_v5\ARM\ARMCC\include\rt_misc.h)(0x57F606B8)
 I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x57F606B8)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F606B8)
-F (.\Serial.c)(0x5997DA2B)(--c99 --thumb -c --cpu ARM7TDMI -D__MICROLIB -g -O2 --apcs=interwork -IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\Inc\Philips-D__UVISION_VERSION="523"-o .\obj\serial.o --omf_browse .\obj\serial.crf --depend .\obj\serial.d)
+F (.\Serial.c)(0x599AAAB0)(--c99 --thumb -c --cpu ARM7TDMI -D__MICROLIB -g -O2 --apcs=interwork -IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\Inc\Philips-D__UVISION_VERSION="523"-o .\obj\serial.o --omf_browse .\obj\serial.crf --depend .\obj\serial.d)
 I (C:\Keil_v5\ARM\Inc\Philips\LPC21xx.H)(0x559CCCF8)
-I (AD7738.h)(0x59969C8B)
-F (.\Measure.c)(0x5997DCA3)(--c99 --thumb -c --cpu ARM7TDMI -D__MICROLIB -g -O2 --apcs=interwork -IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\Inc\Philips-D__UVISION_VERSION="523"-o .\obj\measure.o --omf_browse .\obj\measure.crf --depend .\obj\measure.d)
+I (AD7738.h)(0x599AAA55)
+F (.\Measure.c)(0x599AAAF9)(--c99 --thumb -c --cpu ARM7TDMI -D__MICROLIB -g -O2 --apcs=interwork -IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\Inc\Philips-D__UVISION_VERSION="523"-o .\obj\measure.o --omf_browse .\obj\measure.crf --depend .\obj\measure.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x57F606B8)
 I (C:\Keil_v5\ARM\ARMCC\include\ctype.h)(0x57F606B6)
 I (C:\Keil_v5\ARM\Inc\Philips\LPC21xx.H)(0x559CCCF8)
-I (measure.h)(0x5996AFF1)
+I (measure.h)(0x599A737E)
 F (.\Mcommand.c)(0x4BB1A170)(--c99 --thumb -c --cpu ARM7TDMI -D__MICROLIB -g -O2 --apcs=interwork -IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\Inc\Philips-D__UVISION_VERSION="523"-o .\obj\mcommand.o --omf_browse .\obj\mcommand.crf --depend .\obj\mcommand.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x57F606B8)
 I (C:\Keil_v5\ARM\Inc\Philips\LPC21xx.H)(0x559CCCF8)
-I (measure.h)(0x5996AFF1)
+I (measure.h)(0x599A737E)
 F (.\Getline.c)(0x4BB1A170)(--c99 --thumb -c --cpu ARM7TDMI -D__MICROLIB -g -O2 --apcs=interwork -IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\Inc\Philips-D__UVISION_VERSION="523"-o .\obj\getline.o --omf_browse .\obj\getline.crf --depend .\obj\getline.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x57F606B8)
-I (measure.h)(0x5996AFF1)
+I (measure.h)(0x599A737E)
 F (.\Abstract.txt)(0x4BB1A170)()

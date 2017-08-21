@@ -19,6 +19,7 @@
 #endif
 
 #include "measure.h"                     /* global project definition file    */
+//#include "AD7738.h"
 
 const char menu[] =
    "\n"
@@ -27,6 +28,7 @@ const char menu[] =
    "| the LPC2129 and records the state of Port 0 and the voltage   |\n"
    "| on the four analog inputs AIN0 trough AIN3.                   |\n"
    "+ command -+ syntax -----+ function ----------------------------+\n"
+   "| TEST_SENSE     | A       | Display Sense Resistance|\n"
    "| Read     | R [n]       | read <n> recorded measurements       |\n"
    "| Display  | D           | display current measurement values   |\n"
    "| Time     | T hh:mm:ss  | set time                             |\n"
@@ -70,7 +72,7 @@ static void save_current_measurements (void) {
 
 /* Default Interrupt Function: may be called when timer ISR is disabled */
 void DefISR (void) __irq  {
-  ;
+	;
 }
 
 /******************************************************************************/
@@ -178,137 +180,131 @@ static void clear_records (void) {
 /******************************************************************************/
 /***************************      MAIN PROGRAM      ***************************/
 /******************************************************************************/
-int main (void)  {                             /* main entry for program      */
+int main (void)  
+{                             /* main entry for program      */
 	char cmdbuf [15];                            /* command input buffer        */
 	int i;                                       /* index for command buffer    */
 	int idx;                                     /* index for circular buffer   */
 	unsigned char DATA_BUF = 0x00;
-	unsigned char data0 = 0;
-	unsigned char data1 = 0;
-	unsigned char data2 = 0;
+	unsigned char temperature = 0;
 
-	int DAC_Din = 0;
-	unsigned char temperature = 75;
-
-  PINSEL1 = 0x15400000;                        /* Select AIN0..AIN3           */
-  IODIR1  = 0xFF0000;                          /* P1.16..23 defined as Outputs*/
-  ADCR    = 0x002E0401;                        /* Setup A/D: 10-bit @ 3MHz    */
-
-  init_serial ();                              /* initialite serial interface */
-
-//	printf("PCON:0x%x\n",PCON);
-//	printf("PCSPI0:%d,PCSPI1:%d,PCSSP:%d\n",((PCONP|0x0<<8)>>8)&0x1,((PCONP|0x0<<10)>>10)&0x1,((PCONP|0x0<<21))>>21)&0x1;
+	PINSEL1 = 0x15400000;                        /* Select AIN0..AIN3           */
+	IODIR1  = 0xFF0000;                          /* P1.16..23 defined as Outputs*/
+	ADCR    = 0x002E0401;                        /* Setup A/D: 10-bit @ 3MHz    */
 	
+#ifdef DEBUG
+	printf("PCON:0x%x\n",PCON);
+	printf("PCSPI0:%d,PCSPI1:%d,PCSSP:%d\n",((PCONP|0x0<<8)>>8)&0x1,((PCONP|0x0<<10)>>10)&0x1,((PCONP|0x0<<21))>>21)&0x1;
+#endif
+//printf("channel_setup_1= %d\n",channel_setup_1);
+	init_serial ();                              /* initialite serial interface */
 	AD7738_CS_INIT();
 	DAC8568_CS_INIT();
-
  	init_PWM();
-	
-	DAC_SET_Chanel_Din(temperature,&DAC_Din); /*set want temp value*/
-	printf("%d ",DAC_Din);
-	
-	DAC8568_SET(0x0,0x9,0x0,0xA000,0);		/*Power up internal reference all the time regardless DAC states*/
-	DAC8568_SET(0x0,0x3,0x2,0x8000,0);		/*DAC-C*/
-	DAC8568_SET(0x0,0x3,0x6,DAC_Din,0);		/*DAC-G*/
-	
+	AD7738_SET();
+
+	/* setup the timer counter 0 interrupt */
+	T0MR0 = 14999;                               /* 1mSec = 15.000-1 counts     */
+	T0MCR = 3;                                   /* Interrupt and Reset on MR0  */
+	T0TCR = 1;                                   /* Timer0 Enable               */
+	VICVectAddr0 = (unsigned long)tc0;           /* set interrupt vector in 0   */
+	VICVectCntl0 = 0x20 | 4;                     /* use it for Timer 0 Interrupt*/
+	VICIntEnable = 0x00000010;                   /* Enable Timer0 Interrupt     */
+	VICDefVectAddr = (unsigned long) DefISR;     /* un-assigned VIC interrupts  */
 
 
-while(1){
-	DelayNS(250);
+	clear_records ();                            /* initialize circular buffer  */
+	printf ( menu );                             /* display command menu        */
+	while (1)  
+	{                                 /* loop forever                */
+		printf ("\nCommand: ");
+		getline (&cmdbuf[0], sizeof (cmdbuf));     /* input command line          */
 
-	AD7738_SET(1);
-	while(IO0PIN & 0x1<<15);		/*wait RDY goes LOW*/
-	AD7738_read_channel_data(0x09,&data0,&data1,&data2);	/*09h: Data Register*/
-	printf("channel_1=%d ->%.2f\n",(data0<<16|data1<<8|data2),(data0<<16|data1<<8|data2)/(float)(8388607/2500));
-	Temperature_of_resistance_Parameter(data0,data1,data2);
-	
-	DelayNS(250);
-	AD7738_SET(2);
-	while(IO0PIN & 0x1<<15);
-	AD7738_read_channel_data(0x0A,&data0,&data1,&data2);	/*0Ah: Data Register*/
-	printf("channel_2=%d ->%.2f\n",(data0<<16|data1<<8|data2),(data0<<16|data1<<8|data2)/(float)(8388607/1250));
-	Hydrogen_Resistance_Parameter(data0,data1,data2,temperature);
-//	printf("AD7738=%d ->%.2f\n",(data0<<16|data1<<8|data2),(data0<<16|data1<<8|data2)/(float)(8388607/2500));
-	
-}
+		for (i = 0; cmdbuf[i] != 0; i++)  {        /* convert to upper characters */
+		cmdbuf[i] = toupper(cmdbuf[i]);
+		}
 
-  /* setup the timer counter 0 interrupt */
-  T0MR0 = 14999;                               /* 1mSec = 15.000-1 counts     */
-  T0MCR = 3;                                   /* Interrupt and Reset on MR0  */
-  T0TCR = 1;                                   /* Timer0 Enable               */
-  VICVectAddr0 = (unsigned long)tc0;           /* set interrupt vector in 0   */
-  VICVectCntl0 = 0x20 | 4;                     /* use it for Timer 0 Interrupt*/
-  VICIntEnable = 0x00000010;                   /* Enable Timer0 Interrupt     */
-  VICDefVectAddr = (unsigned long) DefISR;     /* un-assigned VIC interrupts  */
+		for (i = 0; cmdbuf[i] == ' '; i++);        /* skip blanks                 */
 
+		printf("commond=%s\n",cmdbuf);
 
-  clear_records ();                            /* initialize circular buffer  */
-  printf ( menu );                             /* display command menu        */
-  while (1)  {                                 /* loop forever                */
-    printf ("\nCommand: ");
-    getline (&cmdbuf[0], sizeof (cmdbuf));     /* input command line          */
+		switch (cmdbuf[i])  {                      /* proceed to command function */
 
-    for (i = 0; cmdbuf[i] != 0; i++)  {        /* convert to upper characters */
-      cmdbuf[i] = toupper(cmdbuf[i]);
-    }
+			case 'A':
+				printf ("\nDisplay current Measurements: (ESC to abort)\n");
+				printf ("Want Temperature:");
+				getline (cmdbuf, sizeof (cmdbuf));     /* input command line          */
 
-    for (i = 0; cmdbuf[i] == ' '; i++);        /* skip blanks                 */
+				if (strlen(cmdbuf)==2)
+				temperature = (cmdbuf[0]-48)*10+(cmdbuf[1]-48);
+				else if  (strlen(cmdbuf)==3)
+				temperature = (cmdbuf[0]-48)*100+(cmdbuf[1]-48)*10+(cmdbuf[2]-48);
+				else printf("Set temperature error.\n ");
 
-    switch (cmdbuf[i])  {                      /* proceed to command function */
+				printf("Set temperature=%d OK\n",temperature);
 
-      case 'R':                                /* Read circular Buffer        */
-        if ((idx = read_index (&cmdbuf[i+1])) == WRONGINDEX)  break;
-        while (idx != sindex)  {               /* check end of table          */
-          if (U1LSR & 0x01)  {                 /* check serial interface      */
-            if (getkey() == 0x1B) break;       /* for escape character        */
-          }
-          if (save_record[idx].time.hour != 0xff)  {
-            measure_display (save_record[idx]);      /* display record        */
-            printf ("\n");
-          }
-          if (++idx == SCNT) idx = 0;          /* next circular buffer entry  */
-        }
-        break;
+				DAC8568_INIT_SET(temperature);
+				do  {
+					while (!(U1LSR & 0x01))  {
+						TEST_SENSE(temperature);
+					}
+				} while (getkey () != 0x1B);           /* escape terminates command   */
+				printf ("\n\n");
+				break;
+				
+			case 'R':                                /* Read circular Buffer        */
+			if ((idx = read_index (&cmdbuf[i+1])) == WRONGINDEX)  break;
+			while (idx != sindex)  {               /* check end of table          */
+			if (U1LSR & 0x01)  {                 /* check serial interface      */
+			if (getkey() == 0x1B) break;       /* for escape character        */
+			}
+			if (save_record[idx].time.hour != 0xff)  {
+			measure_display (save_record[idx]);      /* display record        */
+			printf ("\n");
+			}
+			if (++idx == SCNT) idx = 0;          /* next circular buffer entry  */
+			}
+			break;
 
-      case 'T':                                /* Enter Current Time          */
-        set_time (&cmdbuf[i+1]);
-        break;
+			case 'T':                                /* Enter Current Time          */
+			set_time (&cmdbuf[i+1]);
+			break;
 
-      case 'I':                                /* Enter Interval Time         */
-        set_interval (&cmdbuf[i+1]);
-        break;
+			case 'I':                                /* Enter Interval Time         */
+			set_interval (&cmdbuf[i+1]);
+			break;
 
-      case 'D':                                /* Display Command             */
-        printf ("\nDisplay current Measurements: (ESC to abort)\n");
-        do  {
-          while (!(U1LSR & 0x01))  {           /* check serial interface      */
-            mdisplay = 1;                      /* request measurement         */
-            while (mdisplay);                  /* wait for measurement        */
-            measure_display (current);         /* display values              */
-          }
-        } while (getkey () != 0x1B);           /* escape terminates command   */
-        printf ("\n\n");
-        break;
+			case 'D':                                /* Display Command             */
+			printf ("\nDisplay current Measurements: (ESC to abort)\n");
+			do  {
+			while (!(U1LSR & 0x01))  {           /* check serial interface      */
+			mdisplay = 1;                      /* request measurement         */
+			while (mdisplay);                  /* wait for measurement        */
+			measure_display (current);         /* display values              */
+			}
+			} while (getkey () != 0x1B);           /* escape terminates command   */
+			printf ("\n\n");
+			break;
 
-      case 'S':                                /* Start Command               */
-        printf ("\nStart Measurement Recording\n");
-        startflag = 1;
-        break;
+			case 'S':                                /* Start Command               */
+			printf ("\nStart Measurement Recording\n");
+			startflag = 1;
+			break;
 
-      case 'Q':                                /* Quit Command                */
-        printf ("\nQuit Measurement Recording\n");
-        startflag = 0;
-        break;
+			case 'Q':                                /* Quit Command                */
+			printf ("\nQuit Measurement Recording\n");
+			startflag = 0;
+			break;
 
-      case 'C':                                /* Clear Command               */
-        printf ("\nClear Measurement Records\n");
-        clear_records ();
-        break;
+			case 'C':                                /* Clear Command               */
+			printf ("\nClear Measurement Records\n");
+			clear_records ();
+			break;
 
-      default:                                 /* Error Handling              */
-        printf (ERROR, "UNKNOWN COMMAND");
-        printf (menu);                         /* display command menu        */
-        break;
-    }
-  }
+			default:                                 /* Error Handling              */
+			printf (ERROR, "UNKNOWN COMMAND");
+			printf (menu);                         /* display command menu        */
+			break;
+		}
+	}
 }

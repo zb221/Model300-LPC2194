@@ -1,21 +1,13 @@
-;#<FEEDBACK># ARM Linker, 5060422: Last Updated: Sat Aug 19 14:37:27 2017
+;#<FEEDBACK># ARM Linker, 5060422: Last Updated: Mon Aug 21 17:42:45 2017
 ;VERSION 0.2
 ;FILE getline.o
-getline <= USED 0
 ;FILE mcommand.o
-measure_display <= USED 0
-set_interval <= USED 0
-set_time <= USED 0
 ;FILE measure.o
-DefISR <= USED 0
-tc0 <= USED 0
 ;FILE retarget.o
 _sys_exit <= USED 0
 _ttywrch <= USED 0
 ferror <= USED 0
 ;FILE serial.o
 AD7738_READ_isr <= USED 0
-AD7738_read <= USED 0
 M25P16_CS_INIT <= USED 0
 SPI1_SendDate <= USED 0
-getkey <= USED 0
