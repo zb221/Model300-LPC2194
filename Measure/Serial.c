@@ -9,6 +9,7 @@
 /******************************************************************************/
 
 #include <LPC21xx.H>                     /* LPC21xx definitions               */
+#include "config.h"
 #include "AD7738.h"
 
 #define CR     0x0D
@@ -131,7 +132,7 @@ void DAC8568_SET(unsigned char PB,unsigned char CB,unsigned char AB,unsigned sho
 	SPI0_SendDate((0xF & DB)<<4 | FB);
 	
 	IOSET0 = IOSET0 | 0x1<<10;	/*/SYNC  SET HIGHT */
-	
+	DelayNS(100);
 	IOCLR0 = IOCLR0 | 0x1<<12;  /*/LDAC set LOW*/
 	DelayNS(100);
 	IOSET0 = IOSET0 | 0x1<<12;  /*/LDAC set HIGHT*/
@@ -203,18 +204,18 @@ void AD7738_SET(void)
 	
 /*-----------------------------------------------set common register of AD7738-----------------------------------------------------*/
 	AD7738_read(IO_PORT_REG,&IO_Port_Reg);
-	AD7738_write(IO_PORT_REG,IO_Port_Reg|1<<3);
+	AD7738_write(IO_PORT_REG,IO_Port_Reg|1<<3);		/*0: the RDY pin will only go low if any, 1: the RDY pin will only go low if all enabled channels have unread data*/
 
 /*----------------------------------------------set channel 1 register of AD7738-----------------------------------------------------*/
-	AD7738_write(0x29,0<<7|1<<6|1<<5|0<<4|1<<3|NP_25);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
-	AD7738_write(0x31,0x91);	/*channel coversion time*/
+	AD7738_write(channel_setup_1,0<<7|AINx_AINx|0<<4|Channel_Continuous_conversion_enable|NP_25);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
+	AD7738_write(channel_conv_time_1,Chop_Enable|FW);	/*channel coversion time*/
 
 /*-----------------------------------------------set channel 2 register of AD7738-----------------------------------------------------*/
-	AD7738_write(0x2A,0<<7|1<<6|1<<5|0<<4|1<<3|NP_125);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
-	AD7738_write(0x32,0x91);	/*channel coversion time*/
+	AD7738_write(channel_setup_2,0<<7|AINx_AINx|0<<4|Channel_Continuous_conversion_enable|NP_125);	/*Channel_0 Setup Registers:BUF_OFF<<7|COM1|COM0|Stat|Channel_CCM|RNG2_0*/
+	AD7738_write(channel_conv_time_2,Chop_Enable|FW);	/*channel coversion time*/
 
 /*-----------------------------------------------set Mode register of AD7738-----------------------------------------------------*/
-	AD7738_write(0x3A,0x1<<5|1<<4|0<<3|0<<2|1<<1|1);		/*Mode Register: Mod2_0|CLKDIS|DUMP|CONT_RD|24_16|CLAMP*/
+	AD7738_write(channel_mode_2,Continues_Conversion_Mode|1<<4|0<<3|0<<2|BIT24|1);		/*Mode Register: Mod2_0|CLKDIS|DUMP|CONT_RD|24_16|CLAMP*/
 
 }
 

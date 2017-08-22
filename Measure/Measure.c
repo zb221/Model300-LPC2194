@@ -19,7 +19,7 @@
 #endif
 
 #include "measure.h"                     /* global project definition file    */
-//#include "AD7738.h"
+#include "config.h"
 
 const char menu[] =
    "\n"
@@ -72,7 +72,7 @@ static void save_current_measurements (void) {
 
 /* Default Interrupt Function: may be called when timer ISR is disabled */
 void DefISR (void) __irq  {
-	;
+	printf("This is Test 1\n");
 }
 
 /******************************************************************************/
@@ -83,7 +83,7 @@ __irq void tc0 (void) {
   unsigned int val;
   unsigned int crval;
   int i;
-
+//printf("This is Test 2\n");
   if (measurement_interval)  {                 /* measurement done ?          */
     save_current_measurements ();              /* yes -> save measurements    */
     measurement_interval = 0;                  /* Save measurements done      */
@@ -192,7 +192,7 @@ int main (void)
 	IODIR1  = 0xFF0000;                          /* P1.16..23 defined as Outputs*/
 	ADCR    = 0x002E0401;                        /* Setup A/D: 10-bit @ 3MHz    */
 	
-#ifdef DEBUG
+#ifdef DEGUG
 	printf("PCON:0x%x\n",PCON);
 	printf("PCSPI0:%d,PCSPI1:%d,PCSSP:%d\n",((PCONP|0x0<<8)>>8)&0x1,((PCONP|0x0<<10)>>10)&0x1,((PCONP|0x0<<21))>>21)&0x1;
 #endif
@@ -204,14 +204,13 @@ int main (void)
 	AD7738_SET();
 
 	/* setup the timer counter 0 interrupt */
-	T0MR0 = 14999;                               /* 1mSec = 15.000-1 counts     */
+	T0MR0 = 14999*1000*2;                               /* 1mSec = 15.000-1 counts     */
 	T0MCR = 3;                                   /* Interrupt and Reset on MR0  */
 	T0TCR = 1;                                   /* Timer0 Enable               */
 	VICVectAddr0 = (unsigned long)tc0;           /* set interrupt vector in 0   */
 	VICVectCntl0 = 0x20 | 4;                     /* use it for Timer 0 Interrupt*/
 	VICIntEnable = 0x00000010;                   /* Enable Timer0 Interrupt     */
 	VICDefVectAddr = (unsigned long) DefISR;     /* un-assigned VIC interrupts  */
-
 
 	clear_records ();                            /* initialize circular buffer  */
 	printf ( menu );                             /* display command menu        */
