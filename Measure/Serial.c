@@ -39,22 +39,33 @@ void DelayNS (unsigned int uiDly)
     }
 } 
 
+void CLOCK_SET(void)
+{
+	/*--Phase Locked Loop(PLL)--*/
+	PLLCON |= 1<<1|1<<0;		/*PLL enable and Connect*/
+	PLLCFG |= 1<<5| 3<<0;			/*P|M: set cclk->48MHz*/
+	PLLFEED |= 0xAA;
+	PLLFEED |= 0x55;
+	/*--APB divider--*/
+	VPBDIV |= 0;			/*--00:VPB=1/4CCLK----01: APB =processor clock. Pclk->48MHz--10:VPB=1/2CCLK--------*/
+}
+
 void init_serial (void)  {               
                                                                                    /* Initialize Serial Interface(uart0/1) */
   PINSEL0 = 0x00000000 | 0x01<<18 | 0x01<<16 | 0x01<<2 | 0x01<<0;                  /* Enable RxD1 and TxD1              */
   U1LCR = 0x83;                          /* 8 bits, no Parity, 1 Stop bit   0x1<<7|0x11<<0  */
-  U1DLL = 97;                            /* 9600 Baud Rate @ 12MHz VPB Clock  */
+  U1DLL = 78;                            /* 9600 Baud Rate @ 12MHz VPB Clock  */
   U1LCR = 0x03;                          /* DLAB = 0                          */
 
 /*---------------------------------SPI0-----------------------------------------------*/
 	PINSEL0 = (PINSEL0 & 0xFFFF00FF) | 0x15<<8; /*SPI0 PIN SEL*/
 	S0SPCR = 0x00|(0 << 3)|(1 << 4)|(1 << 5)|(0 << 6)|(0 << 7);  /*Master mode*/
-	S0SPCCR = 0x00 | 0x1<<5; /*SPI Clock Counter: PCLK / SnSPCCR*/
+	S0SPCCR = 0x00 | 0xC; /*SPI Clock Counter: PCLK / SnSPCCR=12MHz/12*/
 
 /*---------------------------------SPI1-----------------------------------------------*/	
 	PINSEL1 = (PINSEL1 & 0xFFFFFF03)| 0x10<<2|0x10<<4|0x10<<6; /*SPI1 PIN SEL*/
 	S1SPCR = 0x00|(0 << 3)|(1 << 4)|(1 << 5)|(0 << 6)|(0 << 7);  /*Master mode*/
-	S1SPCCR = 0x00 | 0x1<<5; /*SPI Clock Counter: PCLK / SnSPCCR*/
+	S1SPCCR = 0x00 | 0xC; /*SPI Clock Counter: PCLK / SnSPCCR*/
 }
 
 void AD7738_CS_INIT(void)

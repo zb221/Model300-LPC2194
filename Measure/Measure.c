@@ -196,7 +196,9 @@ int main (void)
 	printf("PCON:0x%x\n",PCON);
 	printf("PCSPI0:%d,PCSPI1:%d,PCSSP:%d\n",((PCONP|0x0<<8)>>8)&0x1,((PCONP|0x0<<10)>>10)&0x1,((PCONP|0x0<<21))>>21)&0x1;
 #endif
-//printf("channel_setup_1= %d\n",channel_setup_1);
+	
+//	CLOCK_SET();
+	
 	init_serial ();                              /* initialite serial interface */
 	AD7738_CS_INIT();
 	DAC8568_CS_INIT();

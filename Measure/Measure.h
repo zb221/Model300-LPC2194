@@ -60,4 +60,5 @@ extern void Temperature_of_resistance_Parameter(unsigned char A,unsigned char B,
 extern void Hydrogen_Resistance_Parameter(unsigned char A,unsigned char B,unsigned char C,unsigned char temperature);
 extern void DAC8568_INIT_SET(float temperature);
 extern void TEST_SENSE(unsigned char temperature);
+extern void CLOCK_SET(void);
 

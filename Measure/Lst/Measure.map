@@ -361,6 +361,7 @@ Removing Unused input sections from the image.
     Removing retarget.o(.text), (6 bytes).
     Removing retarget.o(.text), (12 bytes).
     Removing retarget.o(.text), (2 bytes).
+    Removing serial.o(.text), (48 bytes).
     Removing serial.o(.text), (40 bytes).
     Removing serial.o(.text), (24 bytes).
     Removing serial.o(.text), (2 bytes).
@@ -370,7 +371,7 @@ Removing Unused input sections from the image.
     Removing serial.o(.data), (1 bytes).
     Removing serial.o(.data), (1 bytes).
 
-12 unused section(s) (total 91 bytes) removed from the image.
+13 unused section(s) (total 139 bytes) removed from the image.
 
 ==============================================================================
 
@@ -740,79 +741,79 @@ Memory Map of the image
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x00000000   0x00000108   Code   RO            3    RESET               startup.o
-    0x00000108   0x00000000   Code   RO          157  * .ARM.Collect$$$$00000000  mc_t.l(entry.o)
-    0x00000108   0x00000004   Code   RO          455    .ARM.Collect$$$$00000001  mc_t.l(entry2.o)
-    0x0000010c   0x00000004   Code   RO          457    .ARM.Collect$$$$00000004  mc_t.l(entry5.o)
-    0x00000110   0x00000000   Code   RO          459    .ARM.Collect$$$$00000008  mc_t.l(entry7b.o)
-    0x00000110   0x00000000   Code   RO          461    .ARM.Collect$$$$0000000A  mc_t.l(entry8b.o)
-    0x00000110   0x0000000c   Code   RO          462    .ARM.Collect$$$$0000000B  mc_t.l(entry9a.o)
-    0x0000011c   0x00000000   Code   RO          464    .ARM.Collect$$$$0000000D  mc_t.l(entry10a.o)
-    0x0000011c   0x00000000   Code   RO          466    .ARM.Collect$$$$0000000F  mc_t.l(entry11a.o)
-    0x0000011c   0x00000004   Code   RO          456    .ARM.Collect$$$$00002712  mc_t.l(entry2.o)
+    0x00000108   0x00000000   Code   RO          163  * .ARM.Collect$$$$00000000  mc_t.l(entry.o)
+    0x00000108   0x00000004   Code   RO          461    .ARM.Collect$$$$00000001  mc_t.l(entry2.o)
+    0x0000010c   0x00000004   Code   RO          463    .ARM.Collect$$$$00000004  mc_t.l(entry5.o)
+    0x00000110   0x00000000   Code   RO          465    .ARM.Collect$$$$00000008  mc_t.l(entry7b.o)
+    0x00000110   0x00000000   Code   RO          467    .ARM.Collect$$$$0000000A  mc_t.l(entry8b.o)
+    0x00000110   0x0000000c   Code   RO          468    .ARM.Collect$$$$0000000B  mc_t.l(entry9a.o)
+    0x0000011c   0x00000000   Code   RO          470    .ARM.Collect$$$$0000000D  mc_t.l(entry10a.o)
+    0x0000011c   0x00000000   Code   RO          472    .ARM.Collect$$$$0000000F  mc_t.l(entry11a.o)
+    0x0000011c   0x00000004   Code   RO          462    .ARM.Collect$$$$00002712  mc_t.l(entry2.o)
     0x00000120   0x0000000c   Code   RO            8    .text               retarget.o
     0x0000012c   0x00000470   Code   RO           55    .text               serial.o
-    0x0000059c   0x000001d0   Code   RO          100    .text               measure.o
-    0x0000076c   0x000004a8   Code   RO          101    .text               measure.o
-    0x00000c14   0x000001dc   Code   RO          131    .text               mcommand.o
-    0x00000df0   0x00000070   Code   RO          145    .text               getline.o
-    0x00000e60   0x0000000c   Code   RO          162    .text               mc_t.l(toupper.o)
-    0x00000e6c   0x0000000e   Code   RO          164    .text               mc_t.l(strlen.o)
+    0x0000059c   0x000001d0   Code   RO          106    .text               measure.o
+    0x0000076c   0x000004a8   Code   RO          107    .text               measure.o
+    0x00000c14   0x000001dc   Code   RO          137    .text               mcommand.o
+    0x00000df0   0x00000070   Code   RO          151    .text               getline.o
+    0x00000e60   0x0000000c   Code   RO          168    .text               mc_t.l(toupper.o)
+    0x00000e6c   0x0000000e   Code   RO          170    .text               mc_t.l(strlen.o)
     0x00000e7a   0x00000002   PAD
-    0x00000e7c   0x0000003c   Code   RO          431    .text               mc_t.l(__0sscanf.o)
-    0x00000eb8   0x0000015c   Code   RO          433    .text               mc_t.l(_scanf_int.o)
-    0x00001014   0x0000007e   Code   RO          437    .text               mf_t.l(fmul.o)
-    0x00001092   0x00000080   Code   RO          439    .text               mf_t.l(fdiv.o)
+    0x00000e7c   0x0000003c   Code   RO          437    .text               mc_t.l(__0sscanf.o)
+    0x00000eb8   0x0000015c   Code   RO          439    .text               mc_t.l(_scanf_int.o)
+    0x00001014   0x0000007e   Code   RO          443    .text               mf_t.l(fmul.o)
+    0x00001092   0x00000080   Code   RO          445    .text               mf_t.l(fdiv.o)
     0x00001112   0x00000002   PAD
-    0x00001114   0x00000168   Code   RO          441    .text               mf_t.l(dadd.o)
-    0x0000127c   0x000000d4   Code   RO          443    .text               mf_t.l(dmul.o)
-    0x00001350   0x0000002e   Code   RO          445    .text               mf_t.l(dscalb.o)
-    0x0000137e   0x00000012   Code   RO          447    .text               mf_t.l(ffltui.o)
-    0x00001390   0x00000020   Code   RO          449    .text               mf_t.l(dfltui.o)
-    0x000013b0   0x0000004c   Code   RO          451    .text               mf_t.l(dfixi.o)
-    0x000013fc   0x00000028   Code   RO          453    .text               mf_t.l(f2d.o)
-    0x00001424   0x0000002e   Code   RO          468    .text               mc_t.l(uidiv.o)
-    0x00001452   0x00000068   Code   RO          470    .text               mc_t.l(uldiv.o)
-    0x000014ba   0x00000022   Code   RO          472    .text               mc_t.l(llshl.o)
-    0x000014dc   0x00000024   Code   RO          474    .text               mc_t.l(llushr.o)
-    0x00001500   0x00000028   Code   RO          476    .text               mc_t.l(llsshr.o)
-    0x00001528   0x0000001e   Code   RO          478    .text               mc_t.l(_chval.o)
+    0x00001114   0x00000168   Code   RO          447    .text               mf_t.l(dadd.o)
+    0x0000127c   0x000000d4   Code   RO          449    .text               mf_t.l(dmul.o)
+    0x00001350   0x0000002e   Code   RO          451    .text               mf_t.l(dscalb.o)
+    0x0000137e   0x00000012   Code   RO          453    .text               mf_t.l(ffltui.o)
+    0x00001390   0x00000020   Code   RO          455    .text               mf_t.l(dfltui.o)
+    0x000013b0   0x0000004c   Code   RO          457    .text               mf_t.l(dfixi.o)
+    0x000013fc   0x00000028   Code   RO          459    .text               mf_t.l(f2d.o)
+    0x00001424   0x0000002e   Code   RO          474    .text               mc_t.l(uidiv.o)
+    0x00001452   0x00000068   Code   RO          476    .text               mc_t.l(uldiv.o)
+    0x000014ba   0x00000022   Code   RO          478    .text               mc_t.l(llshl.o)
+    0x000014dc   0x00000024   Code   RO          480    .text               mc_t.l(llushr.o)
+    0x00001500   0x00000028   Code   RO          482    .text               mc_t.l(llsshr.o)
+    0x00001528   0x0000001e   Code   RO          484    .text               mc_t.l(_chval.o)
     0x00001546   0x00000002   PAD
-    0x00001548   0x00000030   Code   RO          480    .text               mc_t.l(scanf_char.o)
-    0x00001578   0x00000044   Code   RO          482    .text               mc_t.l(_sgetc.o)
-    0x000015bc   0x00000000   Code   RO          484    .text               mc_t.l(iusefp.o)
-    0x000015bc   0x00000082   Code   RO          485    .text               mf_t.l(fepilogue.o)
-    0x0000163e   0x000000c4   Code   RO          487    .text               mf_t.l(depilogue.o)
+    0x00001548   0x00000030   Code   RO          486    .text               mc_t.l(scanf_char.o)
+    0x00001578   0x00000044   Code   RO          488    .text               mc_t.l(_sgetc.o)
+    0x000015bc   0x00000000   Code   RO          490    .text               mc_t.l(iusefp.o)
+    0x000015bc   0x00000082   Code   RO          491    .text               mf_t.l(fepilogue.o)
+    0x0000163e   0x000000c4   Code   RO          493    .text               mf_t.l(depilogue.o)
     0x00001702   0x00000002   PAD
-    0x00001704   0x000000f4   Code   RO          491    .text               mf_t.l(ddiv.o)
-    0x000017f8   0x00000044   Code   RO          493    .text               mf_t.l(dfixul.o)
-    0x0000183c   0x00000028   Code   RO          495    .text               mf_t.l(cdrcmple.o)
-    0x00001864   0x00000008   Ven    RO          497    .text               mc_t.l(init.o)
-    0x0000186c   0x00000020   Code   RO          497    .text               mc_t.l(init.o)
-    0x0000188c   0x00000014   Code   RO          501    .text               mc_t.l(isspace_c.o)
-    0x000018a0   0x0000036c   Code   RO          503    .text               mc_t.l(_scanf.o)
-    0x00001c0c   0x00000024   Code   RO          505    .text               mc_t.l(ctype_c.o)
-    0x00001c30   0x0000000c   Ven    RO          518    Veneer$$Code        anon$$obj.o
-    0x00001c3c   0x00000008   Ven    RO          519    Veneer$$Code        anon$$obj.o
-    0x00001c44   0x00000008   Ven    RO          403    i.__0printf         mc_t.l(printfa.o)
-    0x00001c4c   0x00000020   Code   RO          403    i.__0printf         mc_t.l(printfa.o)
-    0x00001c6c   0x0000002e   Code   RO          489    i.__ARM_clz         mf_t.l(depilogue.o)
-    0x00001c9a   0x00000002   Code   RO          435    i.__ARM_common_call_via_r1  mc_t.l(_scanf_int.o)
-    0x00001c9c   0x00000002   Code   RO          234    i.__ARM_common_call_via_r2  mc_t.l(printf1.o)
-    0x00001c9e   0x00000002   Code   RO          499    i.__ARM_common_call_via_r3  mc_t.l(init.o)
-    0x00001ca0   0x00000002   Code   RO          188    i.__ARM_common_call_via_r6  mc_t.l(printfb.o)
+    0x00001704   0x000000f4   Code   RO          497    .text               mf_t.l(ddiv.o)
+    0x000017f8   0x00000044   Code   RO          499    .text               mf_t.l(dfixul.o)
+    0x0000183c   0x00000028   Code   RO          501    .text               mf_t.l(cdrcmple.o)
+    0x00001864   0x00000008   Ven    RO          503    .text               mc_t.l(init.o)
+    0x0000186c   0x00000020   Code   RO          503    .text               mc_t.l(init.o)
+    0x0000188c   0x00000014   Code   RO          507    .text               mc_t.l(isspace_c.o)
+    0x000018a0   0x0000036c   Code   RO          509    .text               mc_t.l(_scanf.o)
+    0x00001c0c   0x00000024   Code   RO          511    .text               mc_t.l(ctype_c.o)
+    0x00001c30   0x0000000c   Ven    RO          524    Veneer$$Code        anon$$obj.o
+    0x00001c3c   0x00000008   Ven    RO          525    Veneer$$Code        anon$$obj.o
+    0x00001c44   0x00000008   Ven    RO          409    i.__0printf         mc_t.l(printfa.o)
+    0x00001c4c   0x00000020   Code   RO          409    i.__0printf         mc_t.l(printfa.o)
+    0x00001c6c   0x0000002e   Code   RO          495    i.__ARM_clz         mf_t.l(depilogue.o)
+    0x00001c9a   0x00000002   Code   RO          441    i.__ARM_common_call_via_r1  mc_t.l(_scanf_int.o)
+    0x00001c9c   0x00000002   Code   RO          240    i.__ARM_common_call_via_r2  mc_t.l(printf1.o)
+    0x00001c9e   0x00000002   Code   RO          505    i.__ARM_common_call_via_r3  mc_t.l(init.o)
+    0x00001ca0   0x00000002   Code   RO          194    i.__ARM_common_call_via_r6  mc_t.l(printfb.o)
     0x00001ca2   0x00000002   PAD
-    0x00001ca4   0x0000001c   Code   RO          510    i.__scatterload_copy  mc_t.l(handlers.o)
-    0x00001cc0   0x00000004   Code   RO          511    i.__scatterload_null  mc_t.l(handlers.o)
-    0x00001cc4   0x00000018   Code   RO          512    i.__scatterload_zeroinit  mc_t.l(handlers.o)
-    0x00001cdc   0x00000178   Code   RO          410    i._fp_digits        mc_t.l(printfa.o)
-    0x00001e54   0x00000710   Code   RO          411    i._printf_core      mc_t.l(printfa.o)
-    0x00002564   0x00000026   Code   RO          412    i._printf_post_padding  mc_t.l(printfa.o)
-    0x0000258a   0x00000032   Code   RO          413    i._printf_pre_padding  mc_t.l(printfa.o)
-    0x000025bc   0x0000000c   Code   RO          160    i.putc              mc_t.l(putc.o)
-    0x000025c8   0x00000393   Data   RO          103    .constdata          measure.o
-    0x0000295b   0x00000040   Data   RO          506    .constdata          mc_t.l(ctype_c.o)
+    0x00001ca4   0x0000001c   Code   RO          516    i.__scatterload_copy  mc_t.l(handlers.o)
+    0x00001cc0   0x00000004   Code   RO          517    i.__scatterload_null  mc_t.l(handlers.o)
+    0x00001cc4   0x00000018   Code   RO          518    i.__scatterload_zeroinit  mc_t.l(handlers.o)
+    0x00001cdc   0x00000178   Code   RO          416    i._fp_digits        mc_t.l(printfa.o)
+    0x00001e54   0x00000710   Code   RO          417    i._printf_core      mc_t.l(printfa.o)
+    0x00002564   0x00000026   Code   RO          418    i._printf_post_padding  mc_t.l(printfa.o)
+    0x0000258a   0x00000032   Code   RO          419    i._printf_pre_padding  mc_t.l(printfa.o)
+    0x000025bc   0x0000000c   Code   RO          166    i.putc              mc_t.l(putc.o)
+    0x000025c8   0x00000393   Data   RO          109    .constdata          measure.o
+    0x0000295b   0x00000040   Data   RO          512    .constdata          mc_t.l(ctype_c.o)
     0x0000299b   0x00000001   PAD
-    0x0000299c   0x00000020   Data   RO          508    Region$$Table       anon$$obj.o
+    0x0000299c   0x00000020   Data   RO          514    Region$$Table       anon$$obj.o
 
 
     Execution Region RW_IRAM1 (Base: 0x40000000, Size: 0x00000548, Max: 0x00004000, ABSOLUTE)
@@ -820,9 +821,9 @@ Memory Map of the image
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x40000000   0x00000004   Data   RW           12    .data               retarget.o
-    0x40000004   0x0000001c   Data   RW           59    .data               serial.o
-    0x40000020   0x0000002c   Data   RW          104    .data               measure.o
-    0x4000004c   0x00000070   Zero   RW          102    .bss                measure.o
+    0x40000004   0x0000001c   Data   RW           60    .data               serial.o
+    0x40000020   0x0000002c   Data   RW          110    .data               measure.o
+    0x4000004c   0x00000070   Zero   RW          108    .bss                measure.o
     0x400000bc   0x00000004   PAD
     0x400000c0   0x00000488   Zero   RW            1    STACK               startup.o
 
