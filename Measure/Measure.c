@@ -79,7 +79,7 @@ void DefISR (void) __irq  {
 /*                Timer Counter 0 interrupt service function                  */
 /*                executes each 1ms                                           */
 /******************************************************************************/
-__irq void tc0 (void) {
+__irq void TC0_IR (void) {
   unsigned int val;
   unsigned int crval;
   int i;
@@ -197,22 +197,20 @@ int main (void)
 	printf("PCSPI0:%d,PCSPI1:%d,PCSSP:%d\n",((PCONP|0x0<<8)>>8)&0x1,((PCONP|0x0<<10)>>10)&0x1,((PCONP|0x0<<21))>>21)&0x1;
 #endif
 	
-//	CLOCK_SET();
-	
 	init_serial ();                              /* initialite serial interface */
 	AD7738_CS_INIT();
 	DAC8568_CS_INIT();
  	init_PWM();
 	AD7738_SET();
 
-	/* setup the timer counter 0 interrupt */
-	T0MR0 = 14999*1000*2;                               /* 1mSec = 15.000-1 counts     */
-	T0MCR = 3;                                   /* Interrupt and Reset on MR0  */
-	T0TCR = 1;                                   /* Timer0 Enable               */
-	VICVectAddr0 = (unsigned long)tc0;           /* set interrupt vector in 0   */
-	VICVectCntl0 = 0x20 | 4;                     /* use it for Timer 0 Interrupt*/
-	VICIntEnable = 0x00000010;                   /* Enable Timer0 Interrupt     */
-	VICDefVectAddr = (unsigned long) DefISR;     /* un-assigned VIC interrupts  */
+//	/* setup the timer counter 0 interrupt */
+//	T0MR0 = 14999*1000*2;                               /* 1mSec = 15.000-1 counts     */
+//	T0MCR = 3;                                   /* Interrupt and Reset on MR0  */
+//	T0TCR = 1;                                   /* Timer0 Enable               */
+//	VICVectAddr0 = (unsigned long)TC0_IR;           /* set interrupt vector in 0   */
+//	VICVectCntl0 = 0x20 | 4;                     /* use it for Timer 0 Interrupt*/
+//	VICIntEnable = 0x00000010;                   /* Enable Timer0 Interrupt     */
+//	VICDefVectAddr = (unsigned long) DefISR;     /* un-assigned VIC interrupts  */
 
 	clear_records ();                            /* initialize circular buffer  */
 	printf ( menu );                             /* display command menu        */
@@ -220,6 +218,7 @@ int main (void)
 	{                                 /* loop forever                */
 		printf ("\nCommand: ");
 		getline (&cmdbuf[0], sizeof (cmdbuf));     /* input command line          */
+		printf("cmdbuf[0]=%c\n",cmdbuf[0]);
 
 		for (i = 0; cmdbuf[i] != 0; i++)  {        /* convert to upper characters */
 		cmdbuf[i] = toupper(cmdbuf[i]);

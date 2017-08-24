@@ -1,8 +1,0 @@
-Dependencies for Project 'Measure', Target 'MCB2130': (DO NOT MODIFY !)
-F (.\Startup.s)(0x4BB1A170)(--cpu ARM7TDMI --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1" -I "D:\Keil for arm\ARM\INC" -I "D:\Keil for arm\ARM\INC\Philips" -o ".\Obj\Startup.o" --depend ".\Obj\Startup.d")
-F (.\Retarget.c)(0x4BB1A170)( --thumb -c --cpu ARM7TDMI -D__EVAL -D__MICROLIB -g -O2 --apcs=interwork -I "D:\Keil for arm\ARM\INC" -I "D:\Keil for arm\ARM\INC\Philips" -o ".\Obj\retarget.o" --omf_browse ".\Obj\retarget.crf" --depend ".\Obj\retarget.d")
-F (.\Serial.c)(0x4BB1A170)( --thumb -c --cpu ARM7TDMI -D__EVAL -D__MICROLIB -g -O2 --apcs=interwork -I "D:\Keil for arm\ARM\INC" -I "D:\Keil for arm\ARM\INC\Philips" -o ".\Obj\serial.o" --omf_browse ".\Obj\serial.crf" --depend ".\Obj\serial.d")
-F (.\Measure.c)(0x4BB1A170)( --thumb -c --cpu ARM7TDMI -D__EVAL -D__MICROLIB -g -O2 --apcs=interwork -I "D:\Keil for arm\ARM\INC" -I "D:\Keil for arm\ARM\INC\Philips" -o ".\Obj\measure.o" --omf_browse ".\Obj\measure.crf" --depend ".\Obj\measure.d")
-F (.\Mcommand.c)(0x4BB1A170)( --thumb -c --cpu ARM7TDMI -D__EVAL -D__MICROLIB -g -O2 --apcs=interwork -I "D:\Keil for arm\ARM\INC" -I "D:\Keil for arm\ARM\INC\Philips" -o ".\Obj\mcommand.o" --omf_browse ".\Obj\mcommand.crf" --depend ".\Obj\mcommand.d")
-F (.\Getline.c)(0x4BB1A170)( --thumb -c --cpu ARM7TDMI -D__EVAL -D__MICROLIB -g -O2 --apcs=interwork -I "D:\Keil for arm\ARM\INC" -I "D:\Keil for arm\ARM\INC\Philips" -o ".\Obj\getline.o" --omf_browse ".\Obj\getline.crf" --depend ".\Obj\getline.d")
-F (.\Abstract.txt)(0x4BB1A170)()

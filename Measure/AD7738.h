@@ -39,10 +39,10 @@ enum {
 	channel_setup_6,
 	channel_setup_7
 }CHANNEL_SETUP_REG_ADDR;
-#define AINx_AINx                        0x3<<5
-#define AINx_AINCOM                   0x0<<5
-#define Status_Option                   0<<4
-#define Channel_Continuous_conversion_enable 1<<3
+#define AINx_AINx                        (0x3<<5)
+#define AINx_AINCOM                   (0x0<<5)
+#define Status_Option                   (0<<4)
+#define Channel_Continuous_conversion_enable (1<<3)
 #define NP_125  0x00
 #define P_125   0x01
 #define NP_0625 0x02
@@ -61,8 +61,8 @@ enum {
 	channel_conv_time_6,
 	channel_conv_time_7
 }CHANNEL_CONV_TIME_REG_ADDR;
-#define Chop_Enable		TURE<<7
-#define FW	0x11
+#define Chop_Enable		(TURE<<7)
+#define FW	17
 
 /*---------------------------------------Mode Register------------------------------------*/
 enum {
@@ -75,15 +75,15 @@ enum {
 	channel_mode_6,
 	channel_mode_7
 }CHANNEL_MODE_REG_ADDR;
-#define Idle_Mode							0<<5
-#define Continues_Conversion_Mode			1<<5
-#define Single_Conversion_Mode				2<<5
-#define Power_Down_Mode					3<<5
-#define ADC_Zero_Scale_Self_Calibration		4<<5
-#define Channel_Zero_Scale_System_Calibration	6<<5
-#define Channel_Full_Scale_System_Calibration		7<<5
-#define BIT24		1<<1
-#define BIT16		0<<1
+#define Idle_Mode							(0<<5)
+#define Continues_Conversion_Mode			(1<<5)
+#define Single_Conversion_Mode				(2<<5)
+#define Power_Down_Mode					(3<<5)
+#define ADC_Zero_Scale_Self_Calibration		(4<<5)
+#define Channel_Zero_Scale_System_Calibration	(6<<5)
+#define Channel_Full_Scale_System_Calibration		(7<<5)
+#define BIT24		(1<<1)
+#define BIT16		(0<<1)
 
 
 

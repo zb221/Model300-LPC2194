@@ -1,5 +1,5 @@
 /*DEBUG FLAG*/
 
 #ifndef DEGUG 
-//#define DEGUG
+#define DEGUG
 #endif

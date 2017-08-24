@@ -117,7 +117,7 @@ PLLSTAT_PLOCK   EQU     (1<<10)         ; PLL Lock Status
 ;//               <i> P Value
 ;// </e>
 PLL_SETUP       EQU     1
-PLLCFG_Val      EQU     0x00000023
+PLLCFG_Val      EQU     0x00000024
 
 
 ; Memory Accelerator Module (MAM) definitions
