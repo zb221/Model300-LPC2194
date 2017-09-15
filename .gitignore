@@ -8,6 +8,6 @@ Measure/Obj/
 *.bak
 *.uvgui
 *.uvopt
-*.uvproj
+#*.uvproj
 *.map
 
