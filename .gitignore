@@ -1,13 +1,4 @@
 #
 Measure/Obj/
 *.o
-*.zb
-*.zhuob
-*.uvopt
-*.dep
-*.bak
-*.uvgui
-*.uvopt
-#*.uvproj
-*.map
 
